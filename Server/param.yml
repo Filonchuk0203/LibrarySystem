@@ -1,0 +1,9 @@
+database:
+  db_password: 1234
+  host: localhost
+  db_port: 5432
+  db_name: library
+  pool_name: library_db
+  db_user: postgres
+  db_min_con: 7 
+  db_max_con: 15

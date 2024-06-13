@@ -1,0 +1,114 @@
+<ScrollView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:layout_marginBottom="100dp">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:gravity="center"
+        android:paddingTop="15dp"
+        android:paddingLeft="30dp"
+        android:paddingRight="30dp">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:padding="16dp">
+            <ImageView
+                android:layout_width="20dp"
+                android:layout_height="20dp"
+                android:src="@drawable/library"
+                android:layout_gravity="center"/>
+            <EditText
+                android:id="@+id/editTextLibraryName"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="Назва бібліотеки"
+                android:textColorHint="#d9e5f3"
+                android:layout_marginLeft="15dp"
+                android:background="#00000000"
+                android:inputType="text"
+                android:letterSpacing="0.1"
+                android:textSize="16dp"/>
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="#4a5a71"></LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:padding="16dp">
+            <ImageView
+                android:layout_width="20dp"
+                android:layout_height="20dp"
+                android:src="@drawable/location"
+                android:layout_gravity="center"/>
+            <EditText
+                android:id="@+id/editTextLibraryAddress"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="Адреса бібліотеки"
+                android:textColorHint="#d9e5f3"
+                android:layout_marginLeft="15dp"
+                android:background="#00000000"
+                android:inputType="text"
+                android:letterSpacing="0.1"
+                android:textSize="16dp"/>
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="#4a5a71"></LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:padding="16dp">
+            <ImageView
+                android:layout_width="20dp"
+                android:layout_height="20dp"
+                android:src="@drawable/pswd"
+                android:layout_gravity="center"/>
+            <EditText
+                android:id="@+id/editTextLibrarySecretPassword"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="Секретний пароль для бібліотеки"
+                android:textColorHint="#d9e5f3"
+                android:layout_marginLeft="15dp"
+                android:background="#00000000"
+                android:inputType="textPassword"
+                android:letterSpacing="0.1"
+                android:textSize="16dp"/>
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:paddingTop="20dp"
+            android:paddingLeft="60dp"
+            android:paddingRight="60dp"
+            android:orientation="vertical"
+            android:gravity="bottom"
+            android:layout_marginBottom="20dp">
+
+            <Button
+                android:id="@+id/btnRegisterLibrary"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="12dp"
+                android:text="Реєстрація бібліотеки"/>
+
+        </LinearLayout>
+    </LinearLayout>
+</ScrollView>
