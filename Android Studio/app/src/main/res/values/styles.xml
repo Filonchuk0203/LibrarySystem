@@ -35,4 +35,17 @@
         <item name="android:background">@drawable/input_bg</item>
         <item name="android:textSize">16sp</item>
     </style>
+
+    <style name="ClientMenuButton">
+        <item name="android:layout_width">0dp</item>
+        <item name="android:layout_height">150dp</item>
+        <item name="android:layout_columnWeight">1</item>
+        <item name="android:layout_rowWeight">1</item>
+        <item name="android:orientation">vertical</item>
+        <item name="android:gravity">center</item>
+        <item name="android:background">@drawable/card_bg</item>
+        <item name="android:layout_margin">8dp</item>
+        <item name="android:elevation">8dp</item>
+        <item name="android:padding">16dp</item>
+    </style>
 </resources>

@@ -1,0 +1,129 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/bg_gradient"
+    tools:context=".client.ClientMainActivity">
+
+    <!-- Логотип -->
+    <LinearLayout
+        android:id="@+id/logoContainer"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:gravity="center"
+        android:layout_marginTop="60dp">
+
+        <ImageView
+            android:id="@+id/logoImage"
+            android:layout_width="180dp"
+            android:layout_height="180dp"
+            android:src="@drawable/logotype"
+            android:contentDescription="App Logo" />
+    </LinearLayout>
+
+    <!-- Контейнер для полів вводу -->
+    <LinearLayout
+        android:id="@+id/loginCard"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="32dp"
+        android:layout_below="@id/logoContainer"
+        android:layout_marginTop="40dp"
+        android:layout_marginStart="120dp"
+        android:layout_marginEnd="120dp"
+        android:background="@drawable/card_bg"
+        android:elevation="8dp">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Авторизація"
+            android:textColor="@android:color/white"
+            android:textStyle="bold"
+            android:textSize="26sp"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginBottom="24dp" />
+
+        <!-- Поле Логіну -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center_vertical"
+            android:layout_marginBottom="16dp"
+            android:background="@drawable/input_bg"
+            android:padding="12dp">
+
+            <ImageView
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:src="@drawable/usrusr"
+                android:layout_marginEnd="12dp"
+                app:tint="#DCE9FF" />
+
+            <EditText
+                android:id="@+id/editTextLogin"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="Логін"
+                android:textColorHint="#BFD8FF"
+                android:textColor="@android:color/white"
+                android:background="@android:color/transparent"
+                android:inputType="text"
+                android:textSize="18sp"
+                android:padding="4dp" />
+        </LinearLayout>
+
+        <!-- Поле Паролю -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center_vertical"
+            android:background="@drawable/input_bg"
+            android:padding="12dp">
+
+            <ImageView
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:src="@drawable/pswd"
+                android:layout_marginEnd="12dp"
+                app:tint="#DCE9FF" />
+
+            <EditText
+                android:id="@+id/editTextPassword"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="Пароль"
+                android:textColorHint="#BFD8FF"
+                android:textColor="@android:color/white"
+                android:background="@android:color/transparent"
+                android:inputType="textPassword"
+                android:textSize="18sp"
+                android:padding="4dp" />
+        </LinearLayout>
+
+        <!-- Кнопки -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:layout_marginTop="32dp">
+
+            <Button
+                android:id="@+id/btnLogin"
+                style="@style/MenuMainButton"
+                android:text="Вхід" />
+
+            <Button
+                android:id="@+id/btnRegister"
+                style="@style/MenuMainButton"
+                android:text="Реєстрація"
+                android:layout_marginTop="12dp" />
+        </LinearLayout>
+    </LinearLayout>
+</RelativeLayout>

@@ -1,4 +1,4 @@
-package com.example.myapplication
+package com.example.myapplication.client
 
 import android.annotation.SuppressLint
 import android.content.Intent
@@ -7,6 +7,8 @@ import android.os.Bundle
 import android.widget.Button
 import android.widget.EditText
 import android.widget.Toast
+import com.example.myapplication.HttpClient
+import com.example.myapplication.R
 import okhttp3.Call
 import okhttp3.Callback
 import okhttp3.Response
@@ -15,7 +17,7 @@ import org.json.JSONObject
 import java.io.IOException
 
 
-class MainActivity : AppCompatActivity() {
+class ClientMainActivity : AppCompatActivity() {
     @SuppressLint("SetTextI18n")
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -47,14 +49,14 @@ class MainActivity : AppCompatActivity() {
                     httpClient.postRequest(url, json, object : Callback {
                         override fun onFailure(call: Call, e: IOException) {
                             runOnUiThread {
-                                Toast.makeText(this@MainActivity, "Помилка: Перевірте з'єднання з інтернетом або повторіть спробу пізніше.", Toast.LENGTH_SHORT).show()
+                                Toast.makeText(this@ClientMainActivity, "Помилка: Перевірте з'єднання з інтернетом або повторіть спробу пізніше.", Toast.LENGTH_SHORT).show()
                             }
                         }
 
                         override fun onResponse(call: Call, response: Response) {
                             if (!response.isSuccessful) {
                                 runOnUiThread {
-                                    Toast.makeText(this@MainActivity, "Помилка на сервері, вибачте за незручності.", Toast.LENGTH_SHORT).show()
+                                    Toast.makeText(this@ClientMainActivity, "Помилка на сервері, вибачте за незручності.", Toast.LENGTH_SHORT).show()
                                 }
                                 return
                             }
@@ -64,27 +66,27 @@ class MainActivity : AppCompatActivity() {
                                     val resultValue =
                                         JSONObject(response.body?.use { it?.string() })["result"]
                                     if (resultValue is JSONArray) {
-                                        val intent = Intent(this@MainActivity, MainMenu::class.java)
+                                        val intent = Intent(this@ClientMainActivity, ClientMainMenu::class.java)
                                         intent.putExtra("librarianId", resultValue.getString(0))
                                         intent.putExtra("libraryId", resultValue.getString(1))
                                         intent.putExtra("password", password)
                                         Toast.makeText(
-                                            this@MainActivity,
+                                            this@ClientMainActivity,
                                             "Вхід в систему успішний",
                                             Toast.LENGTH_SHORT
                                         ).show()
                                         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK)
-                                        this@MainActivity.startActivity(intent)
+                                        this@ClientMainActivity.startActivity(intent)
                                     } else if (resultValue == -1) {
-                                        Toast.makeText(this@MainActivity, "Помилка: неправильний логін або пароль", Toast.LENGTH_SHORT).show()
+                                        Toast.makeText(this@ClientMainActivity, "Помилка: неправильний логін або пароль", Toast.LENGTH_SHORT).show()
                                     } else {
-                                        Toast.makeText(this@MainActivity, "Помилка в запиті до серверу", Toast.LENGTH_SHORT).show()
+                                        Toast.makeText(this@ClientMainActivity, "Помилка в запиті до серверу", Toast.LENGTH_SHORT).show()
                                     }
                                 }
 
                             } catch (e: Exception) {
                                 runOnUiThread {
-                                    Toast.makeText(this@MainActivity, "Помилка при обробці відповіді сервера.", Toast.LENGTH_SHORT).show()
+                                    Toast.makeText(this@ClientMainActivity, "Помилка при обробці відповіді сервера.", Toast.LENGTH_SHORT).show()
                                 }
                             }
                         }
@@ -99,7 +101,7 @@ class MainActivity : AppCompatActivity() {
 
         val buttonRegister : Button = findViewById(R.id.btnRegister)
         buttonRegister .setOnClickListener {
-            startActivity(Intent(this, RegisterActivity::class.java))
+            // startActivity(Intent(this, RegisterActivity::class.java))
         }
     }
 }

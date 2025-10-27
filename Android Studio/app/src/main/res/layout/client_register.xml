@@ -1,0 +1,112 @@
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/bg_gradient"
+    android:padding="24dp">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:gravity="center_horizontal">
+
+        <!-- Заголовок -->
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Реєстрація"
+            android:textColor="#ffffff"
+            android:textSize="20sp"
+            android:textStyle="bold"
+            android:layout_marginBottom="20dp"/>
+
+        <!-- Поля введення -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:background="@drawable/card_bg"
+            android:padding="20dp"
+            android:layout_marginBottom="24dp"
+            android:layout_marginHorizontal="8dp"
+            android:clipToOutline="true"
+            android:gravity="center"
+            android:translationZ="2dp"
+            android:layoutDirection="ltr"
+            android:focusableInTouchMode="true"
+            android:elevation="2dp"
+            android:clipChildren="false"
+            android:layout_marginTop="8dp"
+            android:layout_marginLeft="4dp"
+            android:layout_marginRight="4dp"
+            android:backgroundTintMode="add"
+            android:backgroundTint="@null"
+            android:clipToPadding="false"
+            android:layout_gravity="center">
+
+            <!-- Поля -->
+            <EditText
+                android:id="@+id/editTextName"
+                style="@style/CustomInputField"
+                android:hint="Ім’я"/>
+
+            <EditText
+                android:id="@+id/editTextLastName"
+                style="@style/CustomInputField"
+                android:hint="Прізвище"/>
+
+            <EditText
+                android:id="@+id/editTextSurname"
+                style="@style/CustomInputField"
+                android:hint="По-батькові"/>
+
+            <EditText
+                android:id="@+id/editTextPhone"
+                style="@style/CustomInputField"
+                android:hint="Телефон"
+                android:inputType="phone"/>
+
+            <EditText
+                android:id="@+id/editTextAddress"
+                style="@style/CustomInputField"
+                android:hint="Адреса"/>
+
+            <EditText
+                android:id="@+id/editTextEmail"
+                style="@style/CustomInputField"
+                android:hint="Email"
+                android:inputType="textEmailAddress"/>
+
+            <EditText
+                android:id="@+id/editTextLogin"
+                style="@style/CustomInputField"
+                android:hint="Логін"/>
+
+            <EditText
+                android:id="@+id/editTextPassword"
+                style="@style/CustomInputField"
+                android:hint="Пароль"
+                android:inputType="textPassword"/>
+
+            <EditText
+                android:id="@+id/editTextRepeatPassword"
+                style="@style/CustomInputField"
+                android:hint="Повторіть пароль"
+                android:inputType="textPassword"/>
+        </LinearLayout>
+
+        <Button
+            android:id="@+id/btnRegister"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Зареєструватися"
+            android:textAllCaps="false"
+            android:backgroundTint="#3b82f6"
+            android:textColor="#ffffff"
+            android:paddingVertical="12dp"
+            android:layout_marginTop="12dp"
+            android:layout_marginBottom="32dp"
+            android:layout_gravity="center"
+            android:background="@drawable/rounded_button"/>
+    </LinearLayout>
+</ScrollView>

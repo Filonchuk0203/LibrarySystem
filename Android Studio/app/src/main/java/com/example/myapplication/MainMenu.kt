@@ -41,6 +41,7 @@ class MainMenu : AppCompatActivity() {
 
         val librarianId = intent.getStringExtra("librarianId")
         val libraryId = intent.getStringExtra("libraryId")
+        val password = intent.getStringExtra("password")
         if (librarianId == null || libraryId == null)  {
             Toast.makeText(this, "Помилка: Такого бібліотекаря або бібліотеки не існує", Toast.LENGTH_SHORT).show()
             finish()
@@ -652,7 +653,12 @@ class MainMenu : AppCompatActivity() {
 
         val btnTerminal: Button = findViewById(R.id.btnTerminal)
         btnTerminal.setOnClickListener {
-
+            val intent = Intent(this, Terminal::class.java)
+            intent.putExtra("librarianId", librarianId)
+            intent.putExtra("libraryId", libraryId)
+            intent.putExtra("password", password)
+            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK)
+            startActivity(intent)
         }
     }
 

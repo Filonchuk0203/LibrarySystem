@@ -1,4 +1,4 @@
-package com.example.myapplication
+package com.example.myapplication.client
 
 import android.content.Intent
 import android.os.Bundle
@@ -11,6 +11,8 @@ import android.widget.Button
 import android.widget.EditText
 import android.widget.Toast
 import androidx.fragment.app.Fragment
+import com.example.myapplication.HttpClient
+import com.example.myapplication.R
 import okhttp3.Call
 import okhttp3.Callback
 import okhttp3.Response
@@ -18,7 +20,7 @@ import org.json.JSONArray
 import org.json.JSONObject
 import java.io.IOException
 
-class UserRegistrationFragment : Fragment() {
+class ClientRegistration : Fragment() {
     private lateinit var editTextName: EditText
     private lateinit var editTextLastName: EditText
     private lateinit var editTextSurname: EditText
@@ -187,7 +189,7 @@ class UserRegistrationFragment : Fragment() {
                             requireActivity().runOnUiThread {
                                 val resultValue = JSONObject(response.body?.use { it?.string() })["result"]
                                 if (resultValue is JSONArray) {
-                                    val intent = Intent(requireContext(), MainMenu::class.java)
+                                    val intent = Intent(requireContext(), ClientMainMenu::class.java)
                                     intent.putExtra("librarianId", resultValue.getString(0))
                                     intent.putExtra("libraryId", resultValue.getString(1))
                                     intent.putExtra("password", password)
