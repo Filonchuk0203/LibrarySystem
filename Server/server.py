@@ -2,7 +2,6 @@ from sanic import Sanic, response
 import yaml
 from database_manager import DatabaseManager
 import asyncio
-from pyngrok import ngrok
 
 
 with open('param.yml', 'r') as stream:

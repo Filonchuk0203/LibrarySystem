@@ -34,8 +34,10 @@ class MainActivity : AppCompatActivity() {
 //            intent.putExtra("libraryId", "e5589965-f655-4919-ae58-5c8b39eadd39")
 //            this.startActivity(intent)
 
-            val login = editTextLogin.text.toString()
-            val password = editTextPassword.text.toString()
+            //val login = editTextLogin.text.toString()
+            //val password = editTextPassword.text.toString()
+            val login = "djoker0203"
+            val password = "12345678"
             if (login.isNotEmpty() && password.isNotEmpty()) {
                 if (password.length > 7) {
                     val url = getString(R.string.server_url)

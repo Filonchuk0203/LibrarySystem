@@ -1,7 +1,6 @@
 package com.example.myapplication
 
 import android.content.Intent
-import android.content.pm.PackageManager
 import android.os.Bundle
 import android.os.Environment
 import android.view.View
@@ -13,7 +12,6 @@ import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.content.ContextCompat
 import com.itextpdf.kernel.pdf.PdfDocument
 import com.itextpdf.kernel.pdf.PdfWriter
 import com.itextpdf.layout.Document
@@ -26,8 +24,6 @@ import org.json.JSONObject
 import java.io.File
 import java.io.FileOutputStream
 import java.io.IOException
-import android.Manifest
-import androidx.core.app.ActivityCompat
 import com.itextpdf.kernel.font.PdfFont
 import com.itextpdf.kernel.font.PdfFontFactory
 import com.itextpdf.layout.Style
@@ -35,7 +31,6 @@ import com.itextpdf.layout.element.Cell
 import com.itextpdf.layout.element.Paragraph
 import com.itextpdf.layout.properties.UnitValue
 import android.app.DatePickerDialog
-import android.widget.DatePicker
 import java.util.Calendar
 
 class MainMenu : AppCompatActivity() {
@@ -530,125 +525,134 @@ class MainMenu : AppCompatActivity() {
 
 
         val btnReport: Button = findViewById(R.id.btnReport)
-        btnReport.setOnClickListener{
-            if (ContextCompat.checkSelfPermission(this@MainMenu, Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
-                ActivityCompat.requestPermissions(this@MainMenu, arrayOf(Manifest.permission.WRITE_EXTERNAL_STORAGE), 1)
-            } else {
-                var dateFrom: String? = null
-                var dateTo: String? = null
+        btnReport.setOnClickListener {
+            val calendar = Calendar.getInstance()
 
-                val calendar = Calendar.getInstance()
-                val dateFromPicker = DatePickerDialog(
-                    this,
-                    { _: DatePicker, yearFrom: Int, monthFrom: Int, dayFrom: Int ->
-                        dateFrom = "$yearFrom-${monthFrom + 1}-$dayFrom"
-                        val dateToPicker = DatePickerDialog(
-                            this,
-                            { _: DatePicker, yearTo: Int, monthTo: Int, dayTo: Int ->
-                                dateTo = "$yearTo-${monthTo + 1}-$dayTo"
+            // Діалог вибору дати початку
+            val dateFromPicker = DatePickerDialog(
+                this,
+                { _, yearFrom, monthFrom, dayFrom ->
+                    val dateFrom = "$yearFrom-${monthFrom + 1}-$dayFrom"
 
-                                val json = """{
-                                "function_name": "get_report_data",
-                                "param_dict": {
-                                    "library_id": "$libraryId",
-                                    "date_from": "$dateFrom",
-                                    "date_to": "$dateTo"
+                    // Діалог вибору дати завершення
+                    val dateToPicker = DatePickerDialog(
+                        this,
+                        { _, yearTo, monthTo, dayTo ->
+                            val dateTo = "$yearTo-${monthTo + 1}-$dayTo"
+
+                            // Формуємо JSON для запиту
+                            val json = """{
+                        "function_name": "get_report_data",
+                        "param_dict": {
+                            "library_id": "$libraryId",
+                            "date_from": "$dateFrom",
+                            "date_to": "$dateTo"
+                        }
+                    }"""
+
+                            httpClient.postRequest(url, json, object : Callback {
+                                override fun onFailure(call: Call, e: IOException) {
+                                    runOnUiThread {
+                                        Toast.makeText(
+                                            this@MainMenu,
+                                            "Помилка: перевірте інтернет-з'єднання.",
+                                            Toast.LENGTH_SHORT
+                                        ).show()
+                                    }
                                 }
-                            }"""
 
-                                httpClient.postRequest(url, json, object : Callback {
-                                    override fun onFailure(call: Call, e: IOException) {
+                                override fun onResponse(call: Call, response: Response) {
+                                    if (!response.isSuccessful) {
                                         runOnUiThread {
                                             Toast.makeText(
                                                 this@MainMenu,
-                                                "Помилка: Перевірте з'єднання з інтернетом або повторіть спробу пізніше.",
+                                                "Помилка на сервері.",
                                                 Toast.LENGTH_SHORT
                                             ).show()
                                         }
+                                        return
                                     }
 
-                                    override fun onResponse(call: Call, response: Response) {
-                                        if (!response.isSuccessful) {
+                                    try {
+                                        val resultValue = JSONObject(response.body?.string() ?: "")["result"]
+                                        if (resultValue is JSONArray) {
+                                            val allParams = mutableListOf<List<String>>()
+
+                                            for (i in 0 until resultValue.length()) {
+                                                val item = resultValue.getJSONArray(i)
+                                                val params = mutableListOf<String>()
+                                                params.add((i + 1).toString()) // нумерація рядків
+                                                for (j in 0 until item.length()) {
+                                                    params.add(item.getString(j))
+                                                }
+                                                allParams.add(params)
+                                            }
+
                                             runOnUiThread {
                                                 Toast.makeText(
                                                     this@MainMenu,
-                                                    "Помилка на сервері, вибачте за незручності.",
+                                                    "Створюється звіт...",
                                                     Toast.LENGTH_SHORT
                                                 ).show()
-                                            }
-                                            return
-                                        }
 
-                                        try {
-                                            runOnUiThread {
-                                                val resultValue =
-                                                    JSONObject(response.body?.use { it?.string() })["result"]
-                                                if (resultValue is JSONArray) {
-                                                    val allParams = mutableListOf<List<String>>()
-                                                    for (i in 0 until resultValue.length()) {
-                                                        val item = resultValue.getJSONArray(i)
-                                                        val params = mutableListOf<String>()
-                                                        params.add((i + 1).toString())
-                                                        for (j in 0 until item.length()) {
-                                                            params.add(item.getString(j))
-                                                        }
-                                                        for (row in params) {
-                                                        }
-                                                        allParams.add(params)
-                                                    }
+                                                // Виклик твоєї функції створення PDF
+                                                val directory = createPdfReport(allParams)
+
+                                                if (directory != null) {
                                                     Toast.makeText(
                                                         this@MainMenu,
-                                                        "Зачекайте, створюється звіт",
-                                                        Toast.LENGTH_SHORT
+                                                        "Звіт збережено у: ${directory.absolutePath}/report.pdf",
+                                                        Toast.LENGTH_LONG
                                                     ).show()
-                                                    val directory = createPdfReport(allParams)
-                                                    if (directory != null) {
-                                                        Toast.makeText(
-                                                            this@MainMenu,
-                                                            "Звіт успішно створений в ${directory.absolutePath}",
-                                                            Toast.LENGTH_SHORT
-                                                        ).show()
-                                                    } else {
-                                                        Toast.makeText(
-                                                            this@MainMenu,
-                                                            "Виникла помилка під час створення звіту",
-                                                            Toast.LENGTH_SHORT
-                                                        ).show()
-                                                    }
                                                 } else {
                                                     Toast.makeText(
                                                         this@MainMenu,
-                                                        "Помилка в запиті до серверу",
+                                                        "Помилка при створенні звіту.",
                                                         Toast.LENGTH_SHORT
                                                     ).show()
                                                 }
                                             }
-                                        } catch (e: Exception) {
+                                        } else {
                                             runOnUiThread {
                                                 Toast.makeText(
                                                     this@MainMenu,
-                                                    "Помилка при обробці відповіді сервера.",
+                                                    "Помилка у відповіді сервера.",
                                                     Toast.LENGTH_SHORT
                                                 ).show()
                                             }
                                         }
+                                    } catch (e: Exception) {
+                                        runOnUiThread {
+                                            Toast.makeText(
+                                                this@MainMenu,
+                                                "Помилка при обробці відповіді сервера.",
+                                                Toast.LENGTH_SHORT
+                                            ).show()
+                                        }
                                     }
-                                })
-                            },
-                            calendar.get(Calendar.YEAR),
-                            calendar.get(Calendar.MONTH),
-                            calendar.get(Calendar.DAY_OF_MONTH)
-                        )
-                        dateToPicker.setTitle("Оберіть дату закінчення звіту")
-                        dateToPicker.show()
-                    },
-                    calendar.get(Calendar.YEAR),
-                    calendar.get(Calendar.MONTH),
-                    calendar.get(Calendar.DAY_OF_MONTH)
-                )
-                dateFromPicker.setTitle("Оберіть дату початку звіту")
-                dateFromPicker.show()
-            }
+                                }
+                            })
+                        },
+                        calendar.get(Calendar.YEAR),
+                        calendar.get(Calendar.MONTH),
+                        calendar.get(Calendar.DAY_OF_MONTH)
+                    )
+
+                    dateToPicker.setTitle("Оберіть дату закінчення звіту")
+                    dateToPicker.show()
+                },
+                calendar.get(Calendar.YEAR),
+                calendar.get(Calendar.MONTH),
+                calendar.get(Calendar.DAY_OF_MONTH)
+            )
+
+            dateFromPicker.setTitle("Оберіть дату початку звіту")
+            dateFromPicker.show()
+        }
+
+        val btnTerminal: Button = findViewById(R.id.btnTerminal)
+        btnTerminal.setOnClickListener {
+
         }
     }
 

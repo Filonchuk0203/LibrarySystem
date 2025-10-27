@@ -1,120 +1,161 @@
-<!-- res/layout/register.xml -->
+<?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:background="@drawable/bg_gradient"
+    tools:context=".Issuance">
 
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_marginBottom="150dp">
+        android:paddingBottom="150dp">
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_height="wrap_content"
             android:gravity="center"
-            android:paddingTop="15dp"
-            android:paddingLeft="30dp"
-            android:paddingRight="30dp">
+            android:orientation="vertical">
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="vertical">
+                android:gravity="center"
+                android:orientation="vertical"
+                android:layout_marginTop="40dp"
+                android:layout_marginStart="24dp"
+                android:layout_marginEnd="24dp"
+                android:background="@drawable/card_bg"
+                android:padding="24dp"
+                android:elevation="8dp">
 
+                <!-- Заголовок "Введіть книгу" -->
                 <TextView
                     android:id="@+id/textEnterBook"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:text="Введіть книгу"
-                    android:layout_marginTop="16dp"
-                    android:gravity="center"/>
+                    android:textColor="@android:color/white"
+                    android:textSize="24sp"
+                    android:textStyle="bold"
+                    android:gravity="center"
+                    android:layout_marginBottom="16dp"/>
 
+                <!-- Поле пошуку книги -->
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="horizontal"
-                    android:padding="16dp">
+                    android:gravity="center_vertical"
+                    android:layout_marginBottom="12dp"
+                    android:background="@drawable/input_bg"
+                    android:padding="12dp">
+
                     <ImageView
-                        android:layout_width="20dp"
-                        android:layout_height="20dp"
+                        android:layout_width="24dp"
+                        android:layout_height="24dp"
                         android:src="@drawable/book"
-                        android:layout_gravity="center"/>
+                        android:layout_marginEnd="12dp"
+                        app:tint="#DCE9FF"/>
+
                     <AutoCompleteTextView
                         android:id="@+id/autoCompleteTextViewBooks"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:hint="Пошук книг"
-                        android:textColorHint="#d9e5f3"
-                        android:layout_marginLeft="15dp"
-                        android:background="#00000000"
-                        android:letterSpacing="0.1"
-                        android:textSize="16dp"
+                        android:textColor="@android:color/white"
+                        android:textColorHint="#BFD8FF"
+                        android:background="@android:color/transparent"
+                        android:textSize="18sp"
                         android:inputType="text"
-                        tools:ignore="TouchTargetSizeCheck" />
+                        android:padding="4dp"
+                        tools:ignore="TouchTargetSizeCheck"/>
                 </LinearLayout>
-                <LinearLayout
+
+                <View
                     android:layout_width="match_parent"
                     android:layout_height="1dp"
-                    android:background="#4a5a71"></LinearLayout>
+                    android:background="#4a5a71"
+                    android:layout_marginBottom="16dp"/>
+
+                <!-- Заголовок "Введіть читача" -->
                 <TextView
                     android:id="@+id/textEnterReader"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:text="Введіть читача"
+                    android:textColor="@android:color/white"
+                    android:textSize="24sp"
+                    android:textStyle="bold"
                     android:gravity="center"
-                    android:layout_marginTop="16dp"
-                    android:text="Введіть читача"/>
+                    android:layout_marginBottom="16dp"/>
+
+                <!-- Поле пошуку читача -->
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="horizontal"
-                    android:padding="16dp">
+                    android:gravity="center_vertical"
+                    android:layout_marginBottom="12dp"
+                    android:background="@drawable/input_bg"
+                    android:padding="12dp">
+
                     <ImageView
-                        android:layout_width="20dp"
-                        android:layout_height="20dp"
+                        android:layout_width="24dp"
+                        android:layout_height="24dp"
                         android:src="@drawable/usrusr"
-                        android:layout_gravity="center"/>
+                        android:layout_marginEnd="12dp"
+                        app:tint="#DCE9FF"/>
+
                     <AutoCompleteTextView
                         android:id="@+id/autoCompleteTextViewReader"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:hint="Пошук читача"
+                        android:textColor="@android:color/white"
+                        android:textColorHint="#BFD8FF"
+                        android:background="@android:color/transparent"
+                        android:textSize="18sp"
                         android:inputType="text"
-                        android:textColorHint="#d9e5f3"
-                        android:layout_marginLeft="15dp"
-                        android:background="#00000000"
-                        android:letterSpacing="0.1"
-                        android:textSize="16dp"
-                        tools:ignore="TouchTargetSizeCheck" />
+                        android:padding="4dp"
+                        tools:ignore="TouchTargetSizeCheck"/>
                 </LinearLayout>
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="1dp"
-                    android:background="#4a5a71"></LinearLayout>
+
             </LinearLayout>
+
+            <!-- Додатковий простір для ScrollView -->
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="20dp"/>
         </LinearLayout>
     </ScrollView>
+
+    <!-- Кнопки внизу -->
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:paddingLeft="60dp"
-        android:paddingRight="60dp"
+        android:layout_height="wrap_content"
         android:orientation="vertical"
         android:gravity="bottom"
+        android:paddingStart="60dp"
+        android:paddingEnd="60dp"
+        android:layout_alignParentBottom="true"
         android:layout_marginBottom="20dp">
 
         <Button
             android:id="@+id/btnIssuance"
+            style="@style/MenuMainButton"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Реєстрація читача"/>
+            android:text="Видати книгу"/>
 
         <Button
             android:id="@+id/buttonBack"
+            style="@style/MenuMainButton"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="12dp"
+            android:layout_marginTop="12dp"
             android:text="Назад"/>
     </LinearLayout>
 

@@ -1,24 +1,52 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:background="@drawable/bg_gradient">
 
-    <ListView
-        android:id="@+id/listView"
+    <!-- Контейнер з карткою для списку -->
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_above="@+id/buttonBack"
-        android:divider="@android:color/darker_gray"
-        android:dividerHeight="0.5dp"
-        android:padding="16dp" />
+        android:orientation="vertical"
+        android:layout_above="@id/buttonBack"
+        android:layout_marginStart="24dp"
+        android:layout_marginEnd="24dp"
+        android:layout_marginTop="24dp"
+        android:layout_marginBottom="16dp"
+        android:background="@drawable/card_bg"
+        android:padding="16dp"
+        android:elevation="8dp">
 
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Список"
+            android:textColor="@android:color/white"
+            android:textSize="24sp"
+            android:textStyle="bold"
+            android:gravity="center"
+            android:layout_marginBottom="12dp"/>
+
+        <ListView
+            android:id="@+id/listView"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:divider="@android:color/darker_gray"
+            android:dividerHeight="0.5dp"
+            android:padding="8dp"/>
+    </LinearLayout>
+
+    <!-- Кнопка назад -->
     <Button
         android:id="@+id/buttonBack"
-        android:layout_width="wrap_content"
+        style="@style/MenuMainButton"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
-        android:layout_centerHorizontal="true"
-        android:layout_marginBottom="16dp"
-        android:text="Назад" />
-
+        android:layout_marginStart="60dp"
+        android:layout_marginEnd="60dp"
+        android:text="Назад"/>
 </RelativeLayout>

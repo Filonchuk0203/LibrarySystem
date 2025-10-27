@@ -1,172 +1,170 @@
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:background="@drawable/bg_gradient"
+    android:padding="32dp"
+    android:scrollbars="none"
+    tools:context=".MainActivity">
 
-    <RelativeLayout
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:gravity="center_horizontal"
+        android:animateLayoutChanges="true">
 
+        <!-- Заголовок -->
         <TextView
             android:id="@+id/textViewChooseAction"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Виберіть дію"
-            android:textSize="20sp"
-            android:layout_centerHorizontal="true"
-            android:layout_marginTop="16dp"/>
+            android:textColor="@android:color/white"
+            android:textSize="28sp"
+            android:textStyle="bold"
+            android:layout_marginBottom="32dp" />
 
+        <!-- Обробка книг -->
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
-            android:layout_below="@id/textViewChooseAction"
-            android:animateLayoutChanges="true">
+            android:background="@drawable/card_bg"
+            android:elevation="6dp"
+            android:padding="16dp"
+            android:layout_marginBottom="24dp">
 
             <Button
                 android:id="@+id/btnBook"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="Обробка книг"
-                android:layout_marginTop="16dp"
-                android:layout_marginStart="16dp"
-                android:layout_marginEnd="16dp" />
+                style="@style/MenuMainButton"
+                android:text="Обробка книг" />
 
             <LinearLayout
                 android:id="@+id/subButtonBook"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="32dp"
-                android:layout_marginEnd="32dp"
-                android:layout_marginBottom="16dp"
                 android:orientation="vertical"
+                android:layout_marginTop="8dp"
+                android:animateLayoutChanges="true"
                 android:visibility="gone">
-
 
                 <Button
                     android:id="@+id/btnAddBook"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="Додати книгу"
-                    android:layout_marginStart="16dp"
-                    android:layout_marginEnd="16dp"/>
+                    style="@style/MenuSubButton"
+                    android:text="Додати книгу" />
 
                 <Button
                     android:id="@+id/btnViewBooks"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="Переглянути книги"
-                    android:layout_marginStart="16dp"
-                    android:layout_marginEnd="16dp"/>
+                    style="@style/MenuSubButton"
+                    android:text="Переглянути книги" />
 
                 <Button
                     android:id="@+id/btnDeleteBook"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="Видалити книги"
-                    android:layout_marginStart="16dp"
-                    android:layout_marginEnd="16dp"/>
-
+                    style="@style/MenuSubButton"
+                    android:text="Видалити книги" />
             </LinearLayout>
+        </LinearLayout>
+
+        <!-- Обробка читачів -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:background="@drawable/card_bg"
+            android:elevation="6dp"
+            android:padding="16dp"
+            android:layout_marginBottom="24dp">
 
             <Button
                 android:id="@+id/btnReader"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="Обробка читачів"
-                android:layout_marginStart="16dp"
-                android:layout_marginEnd="16dp"/>
+                style="@style/MenuMainButton"
+                android:text="Обробка читачів" />
 
             <LinearLayout
                 android:id="@+id/subButtonReader"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="32dp"
-                android:layout_marginEnd="32dp"
-                android:layout_marginBottom="16dp"
                 android:orientation="vertical"
+                android:layout_marginTop="8dp"
+                android:animateLayoutChanges="true"
                 android:visibility="gone">
 
                 <Button
                     android:id="@+id/btnAddReader"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="Додати читача"
-                    android:layout_marginStart="16dp"
-                    android:layout_marginEnd="16dp"/>
+                    style="@style/MenuSubButton"
+                    android:text="Додати читача" />
 
                 <Button
                     android:id="@+id/btnViewReaders"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="Переглянути читачів"
-                    android:layout_marginStart="16dp"
-                    android:layout_marginEnd="16dp"/>
+                    style="@style/MenuSubButton"
+                    android:text="Переглянути читачів" />
 
                 <Button
                     android:id="@+id/btnDeleteReader"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="Видалити читачів"
-                    android:layout_marginStart="16dp"
-                    android:layout_marginEnd="16dp"/>
+                    style="@style/MenuSubButton"
+                    android:text="Видалити читачів" />
             </LinearLayout>
+        </LinearLayout>
+
+        <!-- Видача та повернення книг -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:background="@drawable/card_bg"
+            android:elevation="6dp"
+            android:padding="16dp"
+            android:layout_marginBottom="24dp">
 
             <Button
                 android:id="@+id/btnIssuanceAndReturn"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="Видача та повернення книг"
-                android:layout_marginStart="16dp"
-                android:layout_marginEnd="16dp"/>
+                style="@style/MenuMainButton"
+                android:text="Видача та повернення книг" />
 
             <LinearLayout
                 android:id="@+id/subButtonIssuanceAndReturn"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="32dp"
-                android:layout_marginEnd="32dp"
-                android:layout_marginBottom="16dp"
                 android:orientation="vertical"
+                android:layout_marginTop="8dp"
+                android:animateLayoutChanges="true"
                 android:visibility="gone">
 
                 <Button
                     android:id="@+id/btnIssuance"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="Видати книгу"
-                    android:layout_marginStart="16dp"
-                    android:layout_marginEnd="16dp"/>
+                    style="@style/MenuSubButton"
+                    android:text="Видати книгу" />
 
                 <Button
                     android:id="@+id/btnReturn"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="Повернути книгу"
-                    android:layout_marginStart="16dp"
-                    android:layout_marginEnd="16dp"/>
+                    style="@style/MenuSubButton"
+                    android:text="Повернути книгу" />
+
                 <Button
                     android:id="@+id/btnІssuedBooks"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="Перегляд виданих книг"
-                    android:layout_marginStart="16dp"
-                    android:layout_marginEnd="16dp"/>
+                    style="@style/MenuSubButton"
+                    android:text="Перегляд виданих книг" />
             </LinearLayout>
+        </LinearLayout>
 
-            <Button
-                android:id="@+id/btnFilter"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="Фільтр"
-                android:layout_marginStart="16dp"
-                android:layout_marginEnd="16dp"/>
-            <Button
-                android:id="@+id/btnReport"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="Звіт"
-                android:layout_marginStart="16dp"
-                android:layout_marginEnd="16dp"/>
+        <!-- Інші кнопки -->
+        <Button
+            android:id="@+id/btnFilter"
+            style="@style/MenuMainButton"
+            android:text="Фільтр" />
+
+        <Button
+            android:id="@+id/btnReport"
+            style="@style/MenuMainButton"
+            android:text="Звіт"
+            android:layout_marginTop="16dp" />
+
+        <Button
+            android:id="@+id/btnTerminal"
+            style="@style/MenuMainButton"
+            android:text="Термінал"
+            android:layout_marginTop="16dp"
+            android:layout_marginBottom="32dp" />
     </LinearLayout>
-</RelativeLayout>
 </ScrollView>

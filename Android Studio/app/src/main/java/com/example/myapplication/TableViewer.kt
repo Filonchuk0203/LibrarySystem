@@ -2,10 +2,14 @@ package com.example.myapplication
 
 import android.annotation.SuppressLint
 import android.content.Intent
+import android.graphics.Color
 import android.os.Bundle
+import android.view.View
+import android.view.ViewGroup
 import android.widget.ArrayAdapter
 import android.widget.Button
 import android.widget.ListView
+import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
@@ -78,11 +82,18 @@ class TableViewer : AppCompatActivity(){
                                 val resultText = resultValue.getString(i)
                                 resultList.add(resultText)
                             }
-                            val resultAdapter = ArrayAdapter(
+                            val resultAdapter = object : ArrayAdapter<String>(
                                 this@TableViewer,
                                 android.R.layout.simple_list_item_1,
                                 resultList
-                            )
+                            ) {
+                                override fun getView(position: Int, convertView: View?, parent: ViewGroup): View {
+                                    val view = super.getView(position, convertView, parent) as TextView
+                                    view.setTextColor(Color.WHITE)  // задаємо білий текст
+                                    return view
+                                }
+                            }
+                            listViewTable.adapter = resultAdapter
                             listViewTable.adapter = resultAdapter
                         } else {
                             Toast.makeText(this@TableViewer, "Помилка в запиті до серверу", Toast.LENGTH_SHORT).show()
