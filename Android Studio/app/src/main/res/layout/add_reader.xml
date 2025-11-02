@@ -42,188 +42,79 @@
                     android:layout_marginBottom="24dp"/>
 
                 <!-- Прізвище -->
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="horizontal"
-                    android:gravity="center_vertical"
-                    android:layout_marginBottom="12dp"
-                    android:background="@drawable/input_bg"
-                    android:padding="12dp">
-
+                <LinearLayout style="@style/InputWithIcon">
                     <ImageView
-                        android:layout_width="24dp"
-                        android:layout_height="24dp"
-                        android:src="@drawable/usrusr"
-                        android:layout_marginEnd="12dp"
-                        app:tint="#DCE9FF"/>
-
+                        style="@style/InputIcon"
+                        android:src="@drawable/usrusr"/>
                     <EditText
                         android:id="@+id/editTextLastName"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
+                        style="@style/InputText"
                         android:hint="Прізвище"
-                        android:textColor="@android:color/white"
-                        android:textColorHint="#BFD8FF"
-                        android:background="@android:color/transparent"
-                        android:textSize="18sp"
-                        android:inputType="text"
-                        android:padding="4dp"/>
+                        android:inputType="text"/>
                 </LinearLayout>
 
                 <!-- Ім'я -->
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="horizontal"
-                    android:gravity="center_vertical"
-                    android:layout_marginBottom="12dp"
-                    android:background="@drawable/input_bg"
-                    android:padding="12dp">
-
+                <LinearLayout style="@style/InputWithIcon">
                     <ImageView
-                        android:layout_width="24dp"
-                        android:layout_height="24dp"
-                        android:src="@drawable/usrusr"
-                        android:layout_marginEnd="12dp"
-                        app:tint="#DCE9FF"/>
-
+                        style="@style/InputIcon"
+                        android:src="@drawable/usrusr"/>
                     <EditText
                         android:id="@+id/editTextFirstName"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
+                        style="@style/InputText"
                         android:hint="Ім'я"
-                        android:textColor="@android:color/white"
-                        android:textColorHint="#BFD8FF"
-                        android:background="@android:color/transparent"
-                        android:textSize="18sp"
-                        android:inputType="text"
-                        android:padding="4dp"/>
+                        android:inputType="text"/>
                 </LinearLayout>
 
                 <!-- По-батькові -->
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="horizontal"
-                    android:gravity="center_vertical"
-                    android:layout_marginBottom="12dp"
-                    android:background="@drawable/input_bg"
-                    android:padding="12dp">
-
+                <LinearLayout style="@style/InputWithIcon">
                     <ImageView
-                        android:layout_width="24dp"
-                        android:layout_height="24dp"
-                        android:src="@drawable/usrusr"
-                        android:layout_marginEnd="12dp"
-                        app:tint="#DCE9FF"/>
-
+                        style="@style/InputIcon"
+                        android:src="@drawable/usrusr"/>
                     <EditText
                         android:id="@+id/editTextMiddleName"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
+                        style="@style/InputText"
                         android:hint="По-батькові"
-                        android:textColor="@android:color/white"
-                        android:textColorHint="#BFD8FF"
-                        android:background="@android:color/transparent"
-                        android:textSize="18sp"
-                        android:inputType="text"
-                        android:padding="4dp"/>
+                        android:inputType="text"/>
                 </LinearLayout>
 
                 <!-- Адреса -->
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="horizontal"
-                    android:gravity="center_vertical"
-                    android:layout_marginBottom="12dp"
-                    android:background="@drawable/input_bg"
-                    android:padding="12dp">
-
+                <LinearLayout style="@style/InputWithIcon">
                     <ImageView
-                        android:layout_width="24dp"
-                        android:layout_height="24dp"
-                        android:src="@drawable/location"
-                        android:layout_marginEnd="12dp"
-                        app:tint="#DCE9FF"/>
-
+                        style="@style/InputIcon"
+                        android:src="@drawable/location"/>
                     <EditText
                         android:id="@+id/editTextAddress"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:hint="Адреса"
-                        android:textColor="@android:color/white"
-                        android:textColorHint="#BFD8FF"
-                        android:background="@android:color/transparent"
-                        android:textSize="18sp"
-                        android:inputType="text"
-                        android:padding="4dp"/>
+                        style="@style/InputText"
+                        android:hint="Місто"
+                        android:inputType="text"/>
                 </LinearLayout>
 
                 <!-- Телефон -->
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="horizontal"
-                    android:gravity="center_vertical"
-                    android:layout_marginBottom="12dp"
-                    android:background="@drawable/input_bg"
-                    android:padding="12dp">
-
+                <LinearLayout style="@style/InputWithIcon">
                     <ImageView
-                        android:layout_width="24dp"
-                        android:layout_height="24dp"
-                        android:src="@drawable/phonemob"
-                        android:layout_marginEnd="12dp"
-                        app:tint="#DCE9FF"/>
-
+                        style="@style/InputIcon"
+                        android:src="@drawable/phonemob"/>
                     <EditText
                         android:id="@+id/editTextPhone"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
+                        style="@style/InputText"
                         android:hint="Телефон"
-                        android:textColor="@android:color/white"
-                        android:textColorHint="#BFD8FF"
-                        android:background="@android:color/transparent"
-                        android:textSize="18sp"
-                        android:inputType="text"
-                        android:padding="4dp"/>
+                        android:inputType="phone"/>
                 </LinearLayout>
 
                 <!-- Email -->
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="horizontal"
-                    android:gravity="center_vertical"
-                    android:layout_marginBottom="12dp"
-                    android:background="@drawable/input_bg"
-                    android:padding="12dp">
-
+                <LinearLayout style="@style/InputWithIcon">
                     <ImageView
-                        android:layout_width="24dp"
-                        android:layout_height="24dp"
-                        android:src="@drawable/message"
-                        android:layout_marginEnd="12dp"
-                        app:tint="#DCE9FF"/>
-
+                        style="@style/InputIcon"
+                        android:src="@drawable/message"/>
                     <EditText
                         android:id="@+id/editTextEmail"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
+                        style="@style/InputText"
                         android:hint="Email"
-                        android:textColor="@android:color/white"
-                        android:textColorHint="#BFD8FF"
-                        android:background="@android:color/transparent"
-                        android:textSize="18sp"
-                        android:inputType="text"
-                        android:padding="4dp"/>
+                        android:inputType="textEmailAddress"/>
                 </LinearLayout>
-
             </LinearLayout>
 
-            <!-- Додатковий простір, щоб не обрізався ScrollView -->
+            <!-- Додатковий простір для прокрутки -->
             <View
                 android:layout_width="match_parent"
                 android:layout_height="20dp"/>

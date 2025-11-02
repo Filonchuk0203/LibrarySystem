@@ -1,6 +1,9 @@
 package com.example.myapplication
 
+import android.Manifest
 import android.content.Intent
+import android.content.pm.ActivityInfo
+import android.content.pm.PackageManager
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
@@ -9,11 +12,15 @@ import android.widget.Button
 import android.widget.EditText
 import android.widget.ImageButton
 import android.widget.Toast
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.content.ContextCompat
+import com.example.myapplication.client.ClientMainMenu
+import com.journeyapps.barcodescanner.ScanContract
+import com.journeyapps.barcodescanner.ScanOptions
 
 class Terminal : AppCompatActivity() {
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.terminal)
@@ -28,7 +35,13 @@ class Terminal : AppCompatActivity() {
 
         // --- Авторизація через QR ---
         btnQR.setOnClickListener {
-
+            if (ContextCompat.checkSelfPermission(this, Manifest.permission.CAMERA)
+                == PackageManager.PERMISSION_GRANTED
+            ) {
+                startQRScanner()
+            } else {
+                cameraPermissionRequest.launch(Manifest.permission.CAMERA)
+            }
         }
 
         // --- Авторизація через логін ---
@@ -85,9 +98,56 @@ class Terminal : AppCompatActivity() {
         startLockTask()
     }
 
+    private val cameraPermissionRequest =
+        registerForActivityResult(ActivityResultContracts.RequestPermission()) { granted ->
+            if (granted) startQRScanner()
+            else Toast.makeText(this, "Доступ до камери заборонений", Toast.LENGTH_SHORT).show()
+        }
+
+    private val qrScanLauncher =
+        registerForActivityResult(ScanContract()) { result ->
+            if (result.contents != null) {
+                handleQRCode(result.contents)
+            } else {
+                Toast.makeText(this, "Сканування скасовано", Toast.LENGTH_SHORT).show()
+            }
+        }
+
     // --- Блокуємо кнопку "Назад" ---
     override fun onBackPressed() {
         Toast.makeText(this, "Повернення заблоковано", Toast.LENGTH_SHORT).show()
+    }
+
+    private fun startQRScanner() {
+        val options = ScanOptions()
+        options.setPrompt("Наведи камеру на QR-код клієнта")
+        options.setBeepEnabled(true)
+        options.setOrientationLocked(false)
+        qrScanLauncher.launch(options)
+    }
+
+    private fun handleQRCode(qrData: String) {
+        try {
+            // Наприклад, QR містить рядок типу: "ClientID:xxx;Password:yyy"
+            val parts = qrData.split(";")
+            val clientId = parts.find { it.startsWith("ClientID:") }?.substringAfter("ClientID:")?.trim()
+            val password = parts.find { it.startsWith("Password:") }?.substringAfter("Password:")?.trim()
+
+            if (clientId != null && password != null) {
+                Toast.makeText(this, "Успішно: $clientId", Toast.LENGTH_SHORT).show()
+
+                // 🔹 Переходимо в TerminalMainMenu
+                val intent = Intent(this, ClientMainMenu::class.java)
+                intent.putExtra("ClientID", clientId)
+                intent.putExtra("password", password)
+                startActivity(intent)
+            } else {
+                Toast.makeText(this, "Некоректний QR-код", Toast.LENGTH_SHORT).show()
+            }
+
+        } catch (e: Exception) {
+            Toast.makeText(this, "Помилка при зчитуванні коду", Toast.LENGTH_SHORT).show()
+        }
     }
 
 }

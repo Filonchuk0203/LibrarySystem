@@ -31,7 +31,7 @@ class MainActivity : AppCompatActivity() {
 
             //val login = editTextLogin.text.toString()
             //val password = editTextPassword.text.toString()
-            val login = "djoker0203"
+            val login = "Djoker"
             val password = "12345678"
             if (login.isNotEmpty() && password.isNotEmpty()) {
                 if (password.length > 7) {

@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/bg_gradient"
+    android:padding="16dp">
+
+    <!-- Контейнер пошуку з AutoCompleteTextView і Spinner -->
+    <LinearLayout
+        android:id="@+id/searchContainer"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center_vertical"
+        android:background="@drawable/input_bg"
+        android:padding="8dp"
+        android:layout_centerHorizontal="true">
+
+        <!-- Поле введення -->
+        <AutoCompleteTextView
+            android:id="@+id/autoCompleteTextViewFind"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:hint="Введіть значення"
+            android:inputType="text"
+            android:textColor="@android:color/white"
+            android:textColorHint="#BFD8FF"
+            android:background="@android:color/transparent"
+            android:textSize="18sp"
+            android:padding="4dp"/>
+
+        <!-- Спадне меню для параметра -->
+        <Spinner
+            android:id="@+id/spinnerFilter"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:spinnerMode="dropdown"
+            android:backgroundTint="@android:color/white"
+            android:popupBackground="@drawable/bg_gradient"
+            android:padding="4dp"
+            />
+    </LinearLayout>
+
+    <!-- Кнопка пошуку -->
+    <Button
+        android:id="@+id/btnFind"
+        style="@style/MenuMainButton"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/searchContainer"
+        android:layout_marginTop="16dp"
+        android:text="Пошук"/>
+
+    <!-- Список результатів -->
+    <ListView
+        android:id="@+id/listView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@id/btnFind"
+        android:divider="@android:color/darker_gray"
+        android:dividerHeight="0.5dp"
+        android:padding="16dp"/>
+</RelativeLayout>

@@ -33,13 +33,13 @@ class ClientMainActivity : AppCompatActivity() {
 
             //val login = editTextLogin.text.toString()
             //val password = editTextPassword.text.toString()
-            val login = "djoker0203"
+            val login = "Djoker"
             val password = "12345678"
             if (login.isNotEmpty() && password.isNotEmpty()) {
                 if (password.length > 7) {
                     val url = getString(R.string.server_url)
                     val json = """{
-                            "function_name": "check_librarian_credentials",
+                            "function_name": "check_client_credentials",
                             "param_dict": {
                                 "login": "$login",
                                 "password": "$password"
@@ -67,8 +67,7 @@ class ClientMainActivity : AppCompatActivity() {
                                         JSONObject(response.body?.use { it?.string() })["result"]
                                     if (resultValue is JSONArray) {
                                         val intent = Intent(this@ClientMainActivity, ClientMainMenu::class.java)
-                                        intent.putExtra("librarianId", resultValue.getString(0))
-                                        intent.putExtra("libraryId", resultValue.getString(1))
+                                        intent.putExtra("ClientID", resultValue.getString(0))
                                         intent.putExtra("password", password)
                                         Toast.makeText(
                                             this@ClientMainActivity,
@@ -101,7 +100,7 @@ class ClientMainActivity : AppCompatActivity() {
 
         val buttonRegister : Button = findViewById(R.id.btnRegister)
         buttonRegister .setOnClickListener {
-            // startActivity(Intent(this, RegisterActivity::class.java))
+            startActivity(Intent(this@ClientMainActivity, ClientRegistration::class.java))
         }
     }
 }

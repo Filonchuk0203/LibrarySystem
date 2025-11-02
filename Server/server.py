@@ -45,6 +45,7 @@ async def create_run():
         address TEXT,
         phone TEXT NOT NULL,
         email TEXT,
+        client_id UUID REFERENCES Client(id) ON DELETE CASCADE ON UPDATE CASCADE,
         takenBooks INTEGER DEFAULT 0,
         library_id UUID REFERENCES Library(id) ON DELETE CASCADE ON UPDATE CASCADE
     );
@@ -72,11 +73,27 @@ async def create_run():
         reader_id UUID REFERENCES Reader(id) ON DELETE CASCADE ON UPDATE CASCADE,
         librarian_id UUID REFERENCES Librarian(id) ON DELETE CASCADE ON UPDATE CASCADE
     );
+    
+    CREATE TABLE IF NOT EXISTS Client (
+        id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+        lastName TEXT NOT NULL,
+        firstName TEXT NOT NULL,
+        middleName TEXT,
+        address TEXT,
+        phone TEXT NOT NULL,
+        email TEXT,
+        login TEXT NOT NULL,
+        password TEXT NOT NULL
+    );
     """
 
     await db_manager.modify_data_in_db(extension_query, None)
 
     await db_manager.modify_data_in_db(create_tables_query, None)
+
+    # тест
+    # result = await db_manager.get_all_mybooks({'client_id': '474f3e6e-87c8-4f23-9149-cebfd7436be5'})
+    # print(result)
 
 app = Sanic("MySanicApp")
 

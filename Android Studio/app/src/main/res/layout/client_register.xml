@@ -20,7 +20,7 @@
             android:textStyle="bold"
             android:layout_marginBottom="20dp"/>
 
-        <!-- Поля введення -->
+        <!-- Контейнер з полями -->
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -30,83 +30,132 @@
             android:layout_marginBottom="24dp"
             android:layout_marginHorizontal="8dp"
             android:clipToOutline="true"
-            android:gravity="center"
-            android:translationZ="2dp"
-            android:layoutDirection="ltr"
-            android:focusableInTouchMode="true"
-            android:elevation="2dp"
-            android:clipChildren="false"
-            android:layout_marginTop="8dp"
-            android:layout_marginLeft="4dp"
-            android:layout_marginRight="4dp"
-            android:backgroundTintMode="add"
-            android:backgroundTint="@null"
-            android:clipToPadding="false"
-            android:layout_gravity="center">
+            android:gravity="center">
 
-            <!-- Поля -->
-            <EditText
-                android:id="@+id/editTextName"
-                style="@style/CustomInputField"
-                android:hint="Ім’я"/>
+            <!-- Ім’я -->
+            <LinearLayout
+                style="@style/InputWithIcon">
+                <ImageView
+                    style="@style/InputIcon"
+                    android:src="@drawable/usrusr"/>
+                <EditText
+                    android:id="@+id/editTextName"
+                    style="@style/InputText"
+                    android:hint="Ім’я"/>
+            </LinearLayout>
 
-            <EditText
-                android:id="@+id/editTextLastName"
-                style="@style/CustomInputField"
-                android:hint="Прізвище"/>
+            <!-- Прізвище -->
+            <LinearLayout
+                style="@style/InputWithIcon">
+                <ImageView
+                    style="@style/InputIcon"
+                    android:src="@drawable/usrusr"/>
+                <EditText
+                    android:id="@+id/editTextLastName"
+                    style="@style/InputText"
+                    android:hint="Прізвище"/>
+            </LinearLayout>
 
-            <EditText
-                android:id="@+id/editTextSurname"
-                style="@style/CustomInputField"
-                android:hint="По-батькові"/>
+            <!-- По-батькові -->
+            <LinearLayout
+                style="@style/InputWithIcon">
+                <ImageView
+                    style="@style/InputIcon"
+                    android:src="@drawable/usrusr"/>
+                <EditText
+                    android:id="@+id/editTextSurname"
+                    style="@style/InputText"
+                    android:hint="По-батькові"/>
+            </LinearLayout>
 
-            <EditText
-                android:id="@+id/editTextPhone"
-                style="@style/CustomInputField"
-                android:hint="Телефон"
-                android:inputType="phone"/>
+            <!-- Телефон -->
+            <LinearLayout
+                style="@style/InputWithIcon">
+                <ImageView
+                    style="@style/InputIcon"
+                    android:src="@drawable/phonemob"/>
+                <EditText
+                    android:id="@+id/editTextPhone"
+                    style="@style/InputText"
+                    android:hint="Телефон"
+                    android:inputType="phone"/>
+            </LinearLayout>
 
-            <EditText
-                android:id="@+id/editTextAddress"
-                style="@style/CustomInputField"
-                android:hint="Адреса"/>
+            <!-- Місто -->
+            <LinearLayout
+                style="@style/InputWithIcon">
+                <ImageView
+                    style="@style/InputIcon"
+                    android:src="@drawable/location"/>
+                <EditText
+                    android:id="@+id/editTextAddress"
+                    style="@style/InputText"
+                    android:hint="Місто"/>
+            </LinearLayout>
 
-            <EditText
-                android:id="@+id/editTextEmail"
-                style="@style/CustomInputField"
-                android:hint="Email"
-                android:inputType="textEmailAddress"/>
+            <!-- Email -->
+            <LinearLayout
+                style="@style/InputWithIcon">
+                <ImageView
+                    style="@style/InputIcon"
+                    android:src="@drawable/message"/>
+                <EditText
+                    android:id="@+id/editTextEmail"
+                    style="@style/InputText"
+                    android:hint="Email"
+                    android:inputType="textEmailAddress"/>
+            </LinearLayout>
 
-            <EditText
-                android:id="@+id/editTextLogin"
-                style="@style/CustomInputField"
-                android:hint="Логін"/>
+            <!-- Логін -->
+            <LinearLayout
+                style="@style/InputWithIcon">
+                <ImageView
+                    style="@style/InputIcon"
+                    android:src="@drawable/usrusr"/>
+                <EditText
+                    android:id="@+id/editTextLogin"
+                    style="@style/InputText"
+                    android:hint="Логін"/>
+            </LinearLayout>
 
-            <EditText
-                android:id="@+id/editTextPassword"
-                style="@style/CustomInputField"
-                android:hint="Пароль"
-                android:inputType="textPassword"/>
+            <!-- Пароль -->
+            <LinearLayout
+                style="@style/InputWithIcon">
+                <ImageView
+                    style="@style/InputIcon"
+                    android:src="@drawable/pswd"/>
+                <EditText
+                    android:id="@+id/editTextPassword"
+                    style="@style/InputText"
+                    android:hint="Пароль"
+                    android:inputType="textPassword"/>
+            </LinearLayout>
 
-            <EditText
-                android:id="@+id/editTextRepeatPassword"
-                style="@style/CustomInputField"
-                android:hint="Повторіть пароль"
-                android:inputType="textPassword"/>
+            <!-- Повторіть пароль -->
+            <LinearLayout
+                style="@style/InputWithIcon">
+                <ImageView
+                    style="@style/InputIcon"
+                    android:src="@drawable/pswd"/>
+                <EditText
+                    android:id="@+id/editTextRepeatPassword"
+                    style="@style/InputText"
+                    android:hint="Повторіть пароль"
+                    android:inputType="textPassword"/>
+            </LinearLayout>
         </LinearLayout>
 
+        <!-- Кнопка -->
         <Button
             android:id="@+id/btnRegister"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="Зареєструватися"
             android:textAllCaps="false"
-            android:backgroundTint="#3b82f6"
             android:textColor="#ffffff"
+            android:background="@drawable/rounded_button"
             android:paddingVertical="12dp"
             android:layout_marginTop="12dp"
-            android:layout_marginBottom="32dp"
-            android:layout_gravity="center"
-            android:background="@drawable/rounded_button"/>
+            android:layout_marginBottom="32dp"/>
     </LinearLayout>
 </ScrollView>

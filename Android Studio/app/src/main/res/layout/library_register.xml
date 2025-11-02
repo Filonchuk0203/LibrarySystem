@@ -10,6 +10,7 @@
         android:orientation="vertical"
         android:gravity="center_horizontal">
 
+        <!-- Заголовок -->
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -19,6 +20,7 @@
             android:textStyle="bold"
             android:layout_marginBottom="20dp"/>
 
+        <!-- Контейнер для полів -->
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -26,35 +28,57 @@
             android:background="@drawable/card_bg"
             android:padding="20dp"
             android:layout_marginBottom="24dp"
-            android:clipToOutline="true">
+            android:clipToOutline="true"
+            android:gravity="center">
 
-            <EditText
-                android:id="@+id/editTextLibraryName"
-                style="@style/CustomInputField"
-                android:hint="Назва бібліотеки"/>
+            <!-- Назва бібліотеки -->
+            <LinearLayout
+                style="@style/InputWithIcon">
+                <ImageView
+                    style="@style/InputIcon"
+                    android:src="@drawable/library"/>
+                <EditText
+                    android:id="@+id/editTextLibraryName"
+                    style="@style/InputText"
+                    android:hint="Назва бібліотеки"/>
+            </LinearLayout>
 
-            <EditText
-                android:id="@+id/editTextLibraryAddress"
-                style="@style/CustomInputField"
-                android:hint="Адреса бібліотеки"/>
+            <!-- Місто та адреса бібліотеки -->
+            <LinearLayout
+                style="@style/InputWithIcon">
+                <ImageView
+                    style="@style/InputIcon"
+                    android:src="@drawable/location"/>
+                <EditText
+                    android:id="@+id/editTextLibraryAddress"
+                    style="@style/InputText"
+                    android:hint="Місто та адреса бібліотеки"/>
+            </LinearLayout>
 
-            <EditText
-                android:id="@+id/editTextLibrarySecretPassword"
-                style="@style/CustomInputField"
-                android:hint="Секретний пароль"
-                android:inputType="textPassword"/>
+            <!-- Секретний пароль -->
+            <LinearLayout
+                style="@style/InputWithIcon">
+                <ImageView
+                    style="@style/InputIcon"
+                    android:src="@drawable/pswd"/>
+                <EditText
+                    android:id="@+id/editTextLibrarySecretPassword"
+                    style="@style/InputText"
+                    android:hint="Секретний пароль"
+                    android:inputType="textPassword"/>
+            </LinearLayout>
         </LinearLayout>
 
+        <!-- Кнопка -->
         <Button
             android:id="@+id/btnRegisterLibrary"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="Зареєструвати бібліотеку"
             android:textAllCaps="false"
-            android:backgroundTint="#3b82f6"
             android:textColor="#ffffff"
+            android:background="@drawable/rounded_button"
             android:paddingVertical="12dp"
-            android:layout_marginTop="12dp"
-            android:background="@drawable/rounded_button"/>
+            android:layout_marginTop="12dp"/>
     </LinearLayout>
 </ScrollView>

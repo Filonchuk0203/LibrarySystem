@@ -41,7 +41,10 @@ class DatabaseManager:
                 cursor.execute(query, parameters)
                 return cursor.rowcount
 
-    #Library
+    #
+    #   Library
+    #
+
     async def add_library(self, param_dict: dict):
         library_name = param_dict.get("library_name")
         if await self.check_library_credentials({"library_name": library_name}):
@@ -73,7 +76,15 @@ class DatabaseManager:
         libraries_list = [library[0] for library in data]
         return libraries_list
 
-    #Librarian
+    async def get_all_libraries(self, param_dict: dict):
+        query = "SELECT * FROM Library"
+        libraries_data = await self.fetch_data_from_db(query)
+        return await self.get_library_view(libraries_data)
+
+    #
+    #   Librarian
+    #
+
     async def check_librarian_credentials(self, param_dict: dict):
         if param_dict.get("password"):
             query = "SELECT id::text, library_id::text FROM Librarian WHERE login = %s AND password = %s"
@@ -103,7 +114,10 @@ class DatabaseManager:
 
         return data if data else -1
 
-    #Book
+    #
+    #   Book
+    #
+
     async def book_exists(self, param_dict: dict):
         if param_dict.get("library_id"):
             query = f"SELECT * FROM Book WHERE {param_dict.get("key")} = %s and library_id = %s"
@@ -152,8 +166,15 @@ class DatabaseManager:
         return rows_affected
 
     async def get_all_books(self, param_dict: dict):
-        query = "SELECT * FROM Book WHERE library_id = %s"
-        parameters = (param_dict.get('library_id'),)
+        library_id = param_dict.get("library_id")
+
+        if library_id:
+            query = "SELECT * FROM Book WHERE library_id = %s"
+            parameters = (library_id,)
+        else:
+            query = "SELECT * FROM Book"
+            parameters = ()
+
         books_data = await self.fetch_data_from_db(query, parameters)
         return await self.get_book_view(books_data)
 
@@ -175,7 +196,10 @@ class DatabaseManager:
         books_list = [book[0] for book in data]
         return books_list
 
-    #Reader
+    #
+    #   Reader
+    #
+
     async def reader_exists(self, param_dict: dict):
         if param_dict.get("library_id"):
             query = f"SELECT * FROM Reader WHERE {param_dict.get('key')} = %s and library_id = %s"
@@ -251,7 +275,10 @@ class DatabaseManager:
         readers_list = [f"{reader[0]} {reader[1]} {reader[2]} {reader[3]}" for reader in data]
         return readers_list
 
-    #Issue
+    #
+    #   Issue
+    #
+
     async def insert_issue(self, param_dict: dict):
         library_id = param_dict.get('library_id')
 
@@ -340,17 +367,91 @@ class DatabaseManager:
         else:
             return "Помилка: Книга не була видана читачеві"
 
+    #
+    # my_book
+    #
+
+    async def get_all_mybooks(self, param_dict: dict):
+        query = """
+            SELECT DISTINCT Book.*
+            FROM Book
+            INNER JOIN Issue ON Book.id = Issue.book_id
+            INNER JOIN Reader ON Issue.reader_id = Reader.id
+            WHERE Reader.client_id = %s
+        """
+        books_data = await self.fetch_data_from_db(query, [param_dict.get('client_id'),])
+        return await self.get_book_view(books_data)
+
+    async def filter_mybooks(self, param_dict: dict):
+        query = f"""
+            SELECT DISTINCT Book.{param_dict.get('column_name')}
+            FROM Book
+            INNER JOIN Issue ON Book.id = Issue.book_id
+            INNER JOIN Reader ON Issue.reader_id = Reader.id
+            WHERE Reader.client_id = %s
+        """
+        result = await self.fetch_data_from_db(query, [param_dict.get('client_id')])
+        return [row[0] for row in result if row[0] is not None]
+
+    async def get_mybooks_from_param(self, param_dict: dict):
+        query = f"""
+            SELECT DISTINCT Book.*
+            FROM Book
+            INNER JOIN Issue ON Book.id = Issue.book_id
+            INNER JOIN Reader ON Issue.reader_id = Reader.id
+            WHERE Reader.client_id = %s AND Book.{param_dict.get('param')} = %s
+        """
+        books_data = await self.fetch_data_from_db(query, [param_dict.get('client_id'), param_dict.get('value')])
+        return await self.get_book_view(books_data)
+
+    async def get_libraries_with_mybook(self, param_dict: dict):
+        """
+        Повертає бібліотеки, з яких клієнт брав книгу з певною назвою.
+        """
+        query = """
+            SELECT DISTINCT L.name, L.address
+            FROM Library L
+            INNER JOIN Book B ON B.library_id = L.id
+            INNER JOIN Issue I ON I.book_id = B.id
+            INNER JOIN Reader R ON I.reader_id = R.id
+            WHERE R.client_id = %s AND B.title = %s
+        """
+        libraries_data = await self.fetch_data_from_db(query, [
+            param_dict.get("client_id"),
+            param_dict.get("book_title")
+        ])
+        return [[lib[0], lib[1]] for lib in libraries_data] if libraries_data else []
+
+    #
+    # filter
+    #
+
     async def filter_books_readers(self, param_dict: dict):
         query = f"SELECT DISTINCT {param_dict.get('column_name')} FROM {param_dict.get('table_name')} WHERE library_id = %s"
         params_list = await self.fetch_data_from_db(query, [param_dict.get('library_id'),])
         return [param[0] for param in params_list]
 
-    async def delete_books_readers_for_param(self, param_dict: dict):
-        query = f"DELETE FROM {param_dict.get('table_name')} WHERE {param_dict.get('column_name')} = %s AND library_id = %s"
-        rows_affected = await self.modify_data_in_db(query, [param_dict.get('value'), param_dict.get('library_id')])
-        if rows_affected == 0:
-            rows_affected = -1
-        return rows_affected
+    async def filter_books(self, param_dict: dict):
+        column_name = param_dict.get('column_name')
+        if not column_name:
+            return []
+        query = f"""
+            SELECT DISTINCT {column_name} 
+            FROM Book
+        """
+        params_list = await self.fetch_data_from_db(query)
+        return [param[0] for param in params_list] if params_list else []
+
+    async def filter_libraries(self, param_dict: dict):
+        column_name = param_dict.get('column_name')
+        if not column_name:
+            return []
+        query = f"""
+            SELECT DISTINCT {column_name} 
+            FROM Library
+        """
+        params_list = await self.fetch_data_from_db(query)
+        return [param[0] for param in params_list] if params_list else []
 
     async def filter_issue(self, param_dict: dict):
         query = f"""
@@ -363,10 +464,50 @@ class DatabaseManager:
         params_list = await self.fetch_data_from_db(query, [param_dict.get('library_id'),])
         return [param[0] for param in params_list]
 
-    async def get_books_from_param(self, param_dict: dict):
-        query = f"SELECT * FROM Book WHERE {param_dict.get('param')} = %s and library_id = %s"
-        books_data = await self.fetch_data_from_db(query, [param_dict.get('value'), param_dict.get('library_id')])
-        return await self.get_book_view(books_data)
+    #
+    # delete
+    #
+
+    async def delete_books_readers_for_param(self, param_dict: dict):
+        query = f"DELETE FROM {param_dict.get('table_name')} WHERE {param_dict.get('column_name')} = %s AND library_id = %s"
+        rows_affected = await self.modify_data_in_db(query, [param_dict.get('value'), param_dict.get('library_id')])
+        if rows_affected == 0:
+            rows_affected = -1
+        return rows_affected
+
+    #
+    # get_with_in
+    #
+
+    async def get_libraries_with_book(self, param_dict: dict):
+        book_title = param_dict.get("book_title")
+        if not book_title:
+            return []
+
+        query = """
+            SELECT DISTINCT L.name, L.address
+            FROM Library L
+            JOIN Book B ON B.library_id = L.id
+            WHERE B.title = %s
+        """
+        libraries_data = await self.fetch_data_from_db(query, [book_title,])
+        return [[lib[0], lib[1]] for lib in libraries_data] if libraries_data else []
+
+    async def get_books_in_library(self, param_dict: dict):
+        library_id = param_dict.get("library_id")
+        if not library_id:
+            return []
+        query = """
+            SELECT title, author
+            FROM Book
+            WHERE library_id = %s
+        """
+        books_data = await self.fetch_data_from_db(query, [library_id,])
+        return [[book[0], book[1]] for book in books_data] if books_data else []
+
+    #
+    #   get__from_param
+    #
 
     async def get_readers_from_param(self, param_dict: dict):
         query = f"SELECT * FROM Reader WHERE {param_dict.get('param')} = %s and library_id = %s"
@@ -385,6 +526,20 @@ class DatabaseManager:
         """
         issues_data = await self.fetch_data_from_db(query, [param_dict.get('value'), param_dict.get('library_id')])
         return await self.get_issue_view(issues_data)
+
+    async def get_libraries_from_param(self, param_dict: dict):
+        query = f"SELECT * FROM Library WHERE {param_dict.get('param')} = %s"
+        libraries_data = await self.fetch_data_from_db(query, [param_dict.get('value')])
+        return await self.get_library_view(libraries_data)
+
+    async def get_books_from_param(self, param_dict: dict):
+        query = f"SELECT * FROM Book WHERE {param_dict.get('param')} = %s"
+        books_data = await self.fetch_data_from_db(query, [param_dict.get('value')])
+        return await self.get_book_view(books_data)
+
+    #
+    #   report
+    #
 
     async def get_report_data(self, param_dict: dict):
         query = """
@@ -421,10 +576,25 @@ class DatabaseManager:
         issues_data = await self.fetch_data_from_db(query, param_dict)
         return issues_data
 
+    #
+    #   get__view
+    #
+
     async def get_books_and_readers(self, param_dict: dict):
         books_name = await self.get_name_books(param_dict)
         readers_name = await self.get_name_readers(param_dict)
         return [books_name, readers_name]
+
+    async def get_library_view(self, libraries_data: list):
+        libraries_list = []
+        for library in libraries_data:
+            library_info = (
+                f"ID: {library[0]}\n"
+                f"Name: {library[1]}\n"
+                f"Address: {library[3]}\n"
+            )
+            libraries_list.append(library_info)
+        return libraries_list
 
     async def get_book_view(self, books_data: list):
         books_list = []
@@ -473,3 +643,46 @@ class DatabaseManager:
             )
             issues_list.append(issue_info)
         return issues_list
+
+    #
+    #   Функції для клієнта
+    #
+
+    async def check_client_credentials(self, param_dict: dict):
+        if param_dict.get("password"):
+            query = """
+            SELECT id::text FROM Client
+            WHERE login = %s AND password = %s
+            """
+            parameters = (param_dict.get("login"), param_dict.get("password"))
+            data = await self.fetch_data_from_db(query, parameters, True)
+            return data if data else -1
+        else:
+            query = "SELECT id::text FROM Client WHERE login = %s"
+            parameters = (param_dict.get("login"),)
+            data = await self.fetch_data_from_db(query, parameters, True)
+            return bool(data)
+
+    async def add_client(self, param_dict: dict):
+        # Перевірка на дублювання логіну
+        if await self.check_client_credentials({"login": param_dict.get("login")}):
+            return -1
+        # Запит на вставку нового клієнта
+        query = """
+        INSERT INTO Client (lastName, firstName, middleName, address, phone, email, login, password)
+        VALUES (%s, %s, %s, %s, %s, %s, %s, %s)
+        RETURNING id::text
+        """
+        parameters = (
+            param_dict.get("last_name"),
+            param_dict.get("user_name"),
+            param_dict.get("sur_name"),
+            param_dict.get("address"),
+            param_dict.get("phone"),
+            param_dict.get("email"),
+            param_dict.get("login"),
+            param_dict.get("password"),
+        )
+
+        data = await self.fetch_data_from_db(query, parameters, True)
+        return data if data else -1

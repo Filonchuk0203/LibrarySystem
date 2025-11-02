@@ -73,6 +73,14 @@
             android:name=".client.ClientMainMenu"
             android:exported="true">
         </activity>
+        <activity
+            android:name=".client.ClientRegistration"
+            android:exported="true">
+        </activity>
+        <activity
+            android:name=".client.ClientFilter"
+            android:exported="true">
+        </activity>
 
     </application>
 

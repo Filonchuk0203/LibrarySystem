@@ -12,11 +12,13 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:paddingBottom="150dp">
+
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:gravity="center"
             android:orientation="vertical">
+
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -39,249 +41,106 @@
                     android:layout_gravity="center_horizontal"
                     android:layout_marginBottom="24dp" />
 
-                <!-- Поле Назва книги -->
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="horizontal"
-                    android:gravity="center_vertical"
-                    android:layout_marginBottom="12dp"
-                    android:background="@drawable/input_bg"
-                    android:padding="12dp">
-
+                <!-- Назва книги -->
+                <LinearLayout style="@style/InputWithIcon">
                     <ImageView
-                        android:layout_width="24dp"
-                        android:layout_height="24dp"
-                        android:src="@drawable/book"
-                        android:layout_marginEnd="12dp"
-                        app:tint="#DCE9FF" />
-
+                        style="@style/InputIcon"
+                        android:src="@drawable/book" />
                     <EditText
                         android:id="@+id/editTextTitle"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
+                        style="@style/InputText"
                         android:hint="Назва книги"
-                        android:textColor="@android:color/white"
-                        android:textColorHint="#BFD8FF"
-                        android:background="@android:color/transparent"
-                        android:textSize="18sp"
-                        android:inputType="text"
-                        android:padding="4dp"/>
+                        android:inputType="text" />
                 </LinearLayout>
 
-                <!-- Поле Автор -->
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="horizontal"
-                    android:gravity="center_vertical"
-                    android:layout_marginBottom="12dp"
-                    android:background="@drawable/input_bg"
-                    android:padding="12dp">
-
+                <!-- Автор -->
+                <LinearLayout style="@style/InputWithIcon">
                     <ImageView
-                        android:layout_width="24dp"
-                        android:layout_height="24dp"
-                        android:src="@drawable/usrusr"
-                        android:layout_marginEnd="12dp"
-                        app:tint="#DCE9FF" />
-
+                        style="@style/InputIcon"
+                        android:src="@drawable/usrusr" />
                     <EditText
                         android:id="@+id/editTextAuthor"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
+                        style="@style/InputText"
                         android:hint="Автор"
-                        android:textColor="@android:color/white"
-                        android:textColorHint="#BFD8FF"
-                        android:background="@android:color/transparent"
-                        android:textSize="18sp"
-                        android:inputType="text"
-                        android:padding="4dp"/>
+                        android:inputType="text" />
                 </LinearLayout>
 
-                <!-- Поле Рік публікації -->
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="horizontal"
-                    android:gravity="center_vertical"
-                    android:layout_marginBottom="12dp"
-                    android:background="@drawable/input_bg"
-                    android:padding="12dp">
-
+                <!-- Рік публікації -->
+                <LinearLayout style="@style/InputWithIcon">
                     <ImageView
-                        android:layout_width="24dp"
-                        android:layout_height="24dp"
-                        android:src="@drawable/book"
-                        android:layout_marginEnd="12dp"
-                        app:tint="#DCE9FF" />
-
+                        style="@style/InputIcon"
+                        android:src="@drawable/year" />
                     <EditText
                         android:id="@+id/editTextPublicationYear"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
+                        style="@style/InputText"
                         android:hint="Рік публікації"
-                        android:textColor="@android:color/white"
-                        android:textColorHint="#BFD8FF"
-                        android:background="@android:color/transparent"
-                        android:textSize="18sp"
-                        android:inputType="number"
-                        android:padding="4dp"/>
+                        android:inputType="number" />
                 </LinearLayout>
 
-                <!-- Поле ISBN -->
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="horizontal"
-                    android:gravity="center_vertical"
-                    android:layout_marginBottom="12dp"
-                    android:background="@drawable/input_bg"
-                    android:padding="12dp">
-
+                <!-- ISBN -->
+                <LinearLayout style="@style/InputWithIcon">
                     <ImageView
-                        android:layout_width="24dp"
-                        android:layout_height="24dp"
-                        android:src="@drawable/isbn"
-                        android:layout_marginEnd="12dp"
-                        app:tint="#DCE9FF" />
-
+                        style="@style/InputIcon"
+                        android:src="@drawable/isbn" />
                     <EditText
                         android:id="@+id/editTextISBN"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
+                        style="@style/InputText"
                         android:hint="ISBN"
-                        android:textColor="@android:color/white"
-                        android:textColorHint="#BFD8FF"
-                        android:background="@android:color/transparent"
-                        android:textSize="18sp"
-                        android:inputType="text"
-                        android:padding="4dp"/>
+                        android:inputType="text" />
                 </LinearLayout>
 
-                <!-- Поле Жанр -->
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="horizontal"
-                    android:gravity="center_vertical"
-                    android:layout_marginBottom="12dp"
-                    android:background="@drawable/input_bg"
-                    android:padding="12dp">
-
+                <!-- Жанр -->
+                <LinearLayout style="@style/InputWithIcon">
                     <ImageView
-                        android:layout_width="24dp"
-                        android:layout_height="24dp"
-                        android:src="@drawable/book"
-                        android:layout_marginEnd="12dp"
-                        app:tint="#DCE9FF" />
-
+                        style="@style/InputIcon"
+                        android:src="@drawable/genre" />
                     <EditText
                         android:id="@+id/editTextGenre"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
+                        style="@style/InputText"
                         android:hint="Жанр"
-                        android:textColor="@android:color/white"
-                        android:textColorHint="#BFD8FF"
-                        android:background="@android:color/transparent"
-                        android:textSize="18sp"
-                        android:inputType="text"
-                        android:padding="4dp"/>
+                        android:inputType="text" />
                 </LinearLayout>
 
-                <!-- Поле Кількість сторінок -->
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="horizontal"
-                    android:gravity="center_vertical"
-                    android:layout_marginBottom="12dp"
-                    android:background="@drawable/input_bg"
-                    android:padding="12dp">
-
+                <!-- Кількість сторінок -->
+                <LinearLayout style="@style/InputWithIcon">
                     <ImageView
-                        android:layout_width="24dp"
-                        android:layout_height="24dp"
-                        android:src="@drawable/page"
-                        android:layout_marginEnd="12dp"
-                        app:tint="#DCE9FF" />
-
+                        style="@style/InputIcon"
+                        android:src="@drawable/page" />
                     <EditText
                         android:id="@+id/editTextPageCount"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
+                        style="@style/InputText"
                         android:hint="Кількість сторінок"
-                        android:textColor="@android:color/white"
-                        android:textColorHint="#BFD8FF"
-                        android:background="@android:color/transparent"
-                        android:textSize="18sp"
-                        android:inputType="number"
-                        android:padding="4dp"/>
+                        android:inputType="number" />
                 </LinearLayout>
 
-                <!-- Поле Кількість книг -->
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="horizontal"
-                    android:gravity="center_vertical"
-                    android:layout_marginBottom="12dp"
-                    android:background="@drawable/input_bg"
-                    android:padding="12dp">
-
+                <!-- Кількість книг -->
+                <LinearLayout style="@style/InputWithIcon">
                     <ImageView
-                        android:layout_width="24dp"
-                        android:layout_height="24dp"
-                        android:src="@drawable/book"
-                        android:layout_marginEnd="12dp"
-                        app:tint="#DCE9FF" />
-
+                        style="@style/InputIcon"
+                        android:src="@drawable/number_books" />
                     <EditText
                         android:id="@+id/editTextAvailableCopies"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
+                        style="@style/InputText"
                         android:hint="Кількість книг"
-                        android:textColor="@android:color/white"
-                        android:textColorHint="#BFD8FF"
-                        android:background="@android:color/transparent"
-                        android:textSize="18sp"
-                        android:inputType="number"
-                        android:padding="4dp"/>
+                        android:inputType="number" />
                 </LinearLayout>
 
-                <!-- Поле Видавництво -->
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="horizontal"
-                    android:gravity="center_vertical"
-                    android:layout_marginBottom="12dp"
-                    android:background="@drawable/input_bg"
-                    android:padding="12dp">
-
+                <!-- Видавництво -->
+                <LinearLayout style="@style/InputWithIcon">
                     <ImageView
-                        android:layout_width="24dp"
-                        android:layout_height="24dp"
-                        android:src="@drawable/publisher"
-                        android:layout_marginEnd="12dp"
-                        app:tint="#DCE9FF" />
-
+                        style="@style/InputIcon"
+                        android:src="@drawable/publisher" />
                     <EditText
                         android:id="@+id/editTextPublisher"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
+                        style="@style/InputText"
                         android:hint="Видавництво"
-                        android:textColor="@android:color/white"
-                        android:textColorHint="#BFD8FF"
-                        android:background="@android:color/transparent"
-                        android:textSize="18sp"
-                        android:inputType="text"
-                        android:padding="4dp"/>
+                        android:inputType="text" />
                 </LinearLayout>
             </LinearLayout>
+
             <View
                 android:layout_width="match_parent"
-                android:layout_height="20dp"/>
+                android:layout_height="20dp" />
         </LinearLayout>
     </ScrollView>
 
@@ -307,7 +166,7 @@
                 android:id="@+id/btnRegisterBook"
                 style="@style/MenuMainButton"
                 android:layout_weight="1"
-                android:text="Реєстрація книги"/>
+                android:text="Реєстрація книги" />
 
             <Button
                 android:id="@+id/btnDeleteBook"
@@ -315,7 +174,7 @@
                 android:layout_weight="1"
                 android:layout_marginStart="8dp"
                 android:text="Видалити книгу"
-                android:visibility="gone"/>
+                android:visibility="gone" />
         </LinearLayout>
 
         <Button
@@ -323,7 +182,7 @@
             style="@style/MenuMainButton"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Назад"/>
+            android:text="Назад" />
     </LinearLayout>
 
 </RelativeLayout>
