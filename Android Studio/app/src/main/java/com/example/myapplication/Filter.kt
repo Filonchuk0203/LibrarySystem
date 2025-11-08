@@ -59,49 +59,26 @@ class Filter : AppCompatActivity(){
             }
         }
 
-        httpClient.postRequest(url, json, object : Callback {
-            override fun onFailure(call: Call, e: IOException) {
-                runOnUiThread {
-                    Toast.makeText(this@Filter, "Помилка: Перевірте з'єднання з інтернетом або повторіть спробу пізніше.", Toast.LENGTH_SHORT).show()
+        httpClient.safePostRequest(this, url, json) { jsonResponse ->
+            val resultValue = jsonResponse["result"]
+
+            if (resultValue is JSONArray) {
+                val allParams = mutableListOf<String>()
+                for (i in 0 until resultValue.length()) {
+                    allParams.add(resultValue.getString(i))
                 }
+
+                val paramAdapter = ArrayAdapter(
+                    this@Filter,
+                    android.R.layout.simple_list_item_1,
+                    allParams
+                )
+                autoCompleteTextViewFind.setAdapter(paramAdapter)
+            } else {
+                Toast.makeText(this@Filter, "Помилка в запиті до серверу", Toast.LENGTH_SHORT).show()
             }
+        }
 
-            override fun onResponse(call: Call, response: Response) {
-                if (!response.isSuccessful) {
-                    runOnUiThread {
-                        Toast.makeText(this@Filter, "Помилка на сервері, вибачте за незручності.", Toast.LENGTH_SHORT).show()
-                    }
-                    return
-                }
-
-                try {
-                    runOnUiThread {
-                        val resultValue = JSONObject(response.body?.use { it?.string() })["result"]
-                        if (resultValue is JSONArray) {
-                            val allParams = mutableListOf<String>()
-                            for (i in 0 until resultValue.length()) {
-                                val resultText = resultValue.getString(i)
-                                allParams.add(resultText)
-                            }
-                            val paramAdapter = ArrayAdapter(
-                                this@Filter,
-                                android.R.layout.simple_list_item_1,
-                                allParams
-                            )
-                            autoCompleteTextViewFind.setAdapter(paramAdapter)
-
-                        } else {
-                            Toast.makeText(this@Filter, "Помилка в запиті до серверу", Toast.LENGTH_SHORT).show()
-                        }
-                    }
-
-                } catch (e: Exception) {
-                    runOnUiThread {
-                        Toast.makeText(this@Filter, "Помилка при обробці відповіді сервера.", Toast.LENGTH_SHORT).show()
-                    }
-                }
-            }
-        })
 
         autoCompleteTextViewFind.setOnItemClickListener { _, _, _, _ ->
             val selectedParams = autoCompleteTextViewFind.text.toString()
@@ -142,53 +119,33 @@ class Filter : AppCompatActivity(){
                 }
             }
 
-            httpClient.postRequest(url, json, object : Callback {
-                override fun onFailure(call: Call, e: IOException) {
-                    runOnUiThread {
-                        Toast.makeText(this@Filter, "Помилка: Перевірте з'єднання з інтернетом або повторіть спробу пізніше.", Toast.LENGTH_SHORT).show()
+            httpClient.safePostRequest(this, url, json) { jsonResponse ->
+                val resultValue = jsonResponse["result"]
+
+                if (resultValue is JSONArray) {
+                    resultList.clear()
+                    for (i in 0 until resultValue.length()) {
+                        resultList.add(resultValue.getString(i))
                     }
+
+                    val resultAdapter = object : ArrayAdapter<String>(
+                        this@Filter,
+                        android.R.layout.simple_list_item_1,
+                        resultList
+                    ) {
+                        override fun getView(position: Int, convertView: View?, parent: ViewGroup): View {
+                            val view = super.getView(position, convertView, parent) as TextView
+                            view.setTextColor(Color.WHITE)
+                            return view
+                        }
+                    }
+
+                    listViewTable.adapter = resultAdapter
+                } else {
+                    Toast.makeText(this@Filter, "Помилка в запиті до серверу", Toast.LENGTH_SHORT).show()
                 }
+            }
 
-                override fun onResponse(call: Call, response: Response) {
-                    if (!response.isSuccessful) {
-                        runOnUiThread {
-                            Toast.makeText(this@Filter, "Помилка на сервері, вибачте за незручності.", Toast.LENGTH_SHORT).show()
-                        }
-                        return
-                    }
-
-                    try {
-                        runOnUiThread {
-                            val resultValue = JSONObject(response.body?.use { it?.string() })["result"]
-                            if (resultValue is JSONArray) {
-                                for (i in 0 until resultValue.length()) {
-                                    val resultText = resultValue.getString(i)
-                                    resultList.add(resultText)
-                                }
-                                val resultAdapter = object : ArrayAdapter<String>(
-                                    this@Filter,
-                                    android.R.layout.simple_list_item_1,
-                                    resultList
-                                ) {
-                                    override fun getView(position: Int, convertView: View?, parent: ViewGroup): View {
-                                        val view = super.getView(position, convertView, parent) as TextView
-                                        view.setTextColor(Color.WHITE)  // задаємо білий текст
-                                        return view
-                                    }
-                                }
-                                listViewTable.adapter = resultAdapter
-                            } else {
-                                Toast.makeText(this@Filter, "Помилка в запиті до серверу", Toast.LENGTH_SHORT).show()
-                            }
-                        }
-
-                    } catch (e: Exception) {
-                        runOnUiThread {
-                            Toast.makeText(this@Filter, "Помилка при обробці відповіді сервера.", Toast.LENGTH_SHORT).show()
-                        }
-                    }
-                }
-            })
 
             listViewTable.setOnItemClickListener { parent, view, position, id ->
                 if (tableName != "Issue"){

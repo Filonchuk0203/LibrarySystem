@@ -127,46 +127,26 @@ class MainMenu : AppCompatActivity() {
                                 "table_name": "Book"
                             }
                         }"""
-                    httpClient.postRequest(url, json, object : Callback {
-                        override fun onFailure(call: Call, e: IOException) {
-                            runOnUiThread {
-                                Toast.makeText(this@MainMenu, "Помилка: Перевірте з'єднання з інтернетом або повторіть спробу пізніше.", Toast.LENGTH_SHORT).show()
+                    httpClient.safePostRequest(this@MainMenu, url, json) { jsonResponse ->
+                        val resultValue = jsonResponse["result"]
+                        runOnUiThread {
+                            if (resultValue is JSONArray) {
+                                val allParams = mutableListOf<String>()
+                                for (i in 0 until resultValue.length()) {
+                                    allParams.add(resultValue.getString(i))
+                                }
+                                val paramAdapter = ArrayAdapter(
+                                    this@MainMenu,
+                                    android.R.layout.simple_list_item_1,
+                                    allParams
+                                )
+                                autoCompleteTextView.setAdapter(paramAdapter)
+                            } else {
+                                Toast.makeText(this@MainMenu, "Помилка в запиті до серверу", Toast.LENGTH_SHORT).show()
                             }
                         }
-                        override fun onResponse(call: Call, response: Response) {
-                            if (!response.isSuccessful) {
-                                runOnUiThread {
-                                    Toast.makeText(this@MainMenu, "Помилка на сервері, вибачте за незручності.", Toast.LENGTH_SHORT).show()
-                                }
-                                return
-                            }
+                    }
 
-                            try {
-                                runOnUiThread {
-                                    val resultValue = JSONObject(response.body?.use { it?.string() })["result"]
-                                    if (resultValue is JSONArray) {
-                                        for (i in 0 until resultValue.length()) {
-                                            val resultText = resultValue.getString(i)
-                                            allParams.add(resultText)
-                                        }
-                                        val paramAdapter = ArrayAdapter(
-                                            this@MainMenu,
-                                            android.R.layout.simple_list_item_1,
-                                            allParams
-                                        )
-                                        autoCompleteTextView.setAdapter(paramAdapter)
-
-                                    } else {
-                                        Toast.makeText(this@MainMenu, "Помилка в запиті до серверу", Toast.LENGTH_SHORT).show()
-                                    }
-                                }
-                            } catch (e: Exception) {
-                                runOnUiThread {
-                                    Toast.makeText(this@MainMenu, "Помилка при обробці відповіді сервера.", Toast.LENGTH_SHORT).show()
-                                }
-                            }
-                        }
-                    })
                     val dialogValue = AlertDialog.Builder(this)
                     dialogValue.setView(dialogLayout)
                         .setPositiveButton("OK") { dialogInterface, _ ->
@@ -187,41 +167,17 @@ class MainMenu : AppCompatActivity() {
                                             }
                                         }"""
 
-                                        httpClient.postRequest(url, json, object : Callback {
-                                            override fun onFailure(call: Call, e: IOException) {
-                                                runOnUiThread {
-                                                    Toast.makeText(this@MainMenu, "Помилка: Перевірте з'єднання з інтернетом або повторіть спробу пізніше.", Toast.LENGTH_SHORT).show()
+                                        httpClient.safePostRequest(this@MainMenu, url, json) { jsonResponse ->
+                                            val resultValue = jsonResponse.getInt("result")
+                                            runOnUiThread {
+                                                when {
+                                                    resultValue > 0 -> Toast.makeText(this@MainMenu, "Видалені книги: $resultValue", Toast.LENGTH_SHORT).show()
+                                                    resultValue == -1 -> Toast.makeText(this@MainMenu, "Книг з таким значенням параметра не існує", Toast.LENGTH_SHORT).show()
+                                                    else -> Toast.makeText(this@MainMenu, "Помилка в запиті до серверу", Toast.LENGTH_SHORT).show()
                                                 }
                                             }
-                                            override fun onResponse(call: Call, response: Response) {
-                                                if (!response.isSuccessful) {
-                                                    runOnUiThread {
-                                                        Toast.makeText(this@MainMenu, "Помилка на сервері, вибачте за незручності.", Toast.LENGTH_SHORT).show()
-                                                    }
-                                                    return
-                                                }
-                                                try {
-                                                    runOnUiThread {
-                                                        val resultValue = JSONObject(response.body?.use { it?.string() }).getInt("result")
-                                                        if (resultValue > 0) {
-                                                            Toast.makeText(
-                                                                this@MainMenu,
-                                                                "Видалені книги: $resultValue",
-                                                                Toast.LENGTH_SHORT
-                                                            ).show()
-                                                        } else if (resultValue == -1) {
-                                                            Toast.makeText(this@MainMenu, "Книг з таким значенням параметра не існує", Toast.LENGTH_SHORT).show()
-                                                        } else {
-                                                            Toast.makeText(this@MainMenu, "Помилка в запиті до серверу", Toast.LENGTH_SHORT).show()
-                                                        }
-                                                    }
-                                                } catch (e: Exception) {
-                                                    runOnUiThread {
-                                                        Toast.makeText(this@MainMenu, "Помилка при обробці відповіді сервера.", Toast.LENGTH_SHORT).show()
-                                                    }
-                                                }
-                                            }
-                                        })
+                                        }
+
                                         dialogInterface.dismiss()
                                     }
                                     .setNegativeButton("Ні") { dialogInterface, _ ->
@@ -292,46 +248,26 @@ class MainMenu : AppCompatActivity() {
                                 "table_name": "Reader"
                             }
                         }"""
-                    httpClient.postRequest(url, json, object : Callback {
-                        override fun onFailure(call: Call, e: IOException) {
-                            runOnUiThread {
-                                Toast.makeText(this@MainMenu, "Помилка: Перевірте з'єднання з інтернетом або повторіть спробу пізніше.", Toast.LENGTH_SHORT).show()
+                    httpClient.safePostRequest(this@MainMenu, url, json) { jsonResponse ->
+                        val resultValue = jsonResponse["result"]
+                        runOnUiThread {
+                            if (resultValue is JSONArray) {
+                                val allParams = mutableListOf<String>()
+                                for (i in 0 until resultValue.length()) {
+                                    allParams.add(resultValue.getString(i))
+                                }
+                                val paramAdapter = ArrayAdapter(
+                                    this@MainMenu,
+                                    android.R.layout.simple_list_item_1,
+                                    allParams
+                                )
+                                autoCompleteTextView.setAdapter(paramAdapter)
+                            } else {
+                                Toast.makeText(this@MainMenu, "Помилка в запиті до серверу", Toast.LENGTH_SHORT).show()
                             }
                         }
-                        override fun onResponse(call: Call, response: Response) {
-                            if (!response.isSuccessful) {
-                                runOnUiThread {
-                                    Toast.makeText(this@MainMenu, "Помилка на сервері, вибачте за незручності.", Toast.LENGTH_SHORT).show()
-                                }
-                                return
-                            }
+                    }
 
-                            try {
-                                runOnUiThread {
-                                    val resultValue = JSONObject(response.body?.use { it?.string() })["result"]
-                                    if (resultValue is JSONArray) {
-                                        for (i in 0 until resultValue.length()) {
-                                            val resultText = resultValue.getString(i)
-                                            allParams.add(resultText)
-                                        }
-                                        val paramAdapter = ArrayAdapter(
-                                            this@MainMenu,
-                                            android.R.layout.simple_list_item_1,
-                                            allParams
-                                        )
-                                        autoCompleteTextView.setAdapter(paramAdapter)
-
-                                    } else {
-                                        Toast.makeText(this@MainMenu, "Помилка в запиті до серверу", Toast.LENGTH_SHORT).show()
-                                    }
-                                }
-                            } catch (e: Exception) {
-                                runOnUiThread {
-                                    Toast.makeText(this@MainMenu, "Помилка при обробці відповіді сервера.", Toast.LENGTH_SHORT).show()
-                                }
-                            }
-                        }
-                    })
                     val dialogValue = AlertDialog.Builder(this)
                     dialogValue.setView(dialogLayout)
                         .setPositiveButton("OK") { dialogInterface, _ ->
@@ -352,41 +288,17 @@ class MainMenu : AppCompatActivity() {
                                             }
                                         }"""
 
-                                        httpClient.postRequest(url, json, object : Callback {
-                                            override fun onFailure(call: Call, e: IOException) {
-                                                runOnUiThread {
-                                                    Toast.makeText(this@MainMenu, "Помилка: Перевірте з'єднання з інтернетом або повторіть спробу пізніше.", Toast.LENGTH_SHORT).show()
+                                        httpClient.safePostRequest(this@MainMenu, url, json) { jsonResponse ->
+                                            val resultValue = jsonResponse.getInt("result")
+                                            runOnUiThread {
+                                                when {
+                                                    resultValue > 0 -> Toast.makeText(this@MainMenu, "Видалені читачі: $resultValue", Toast.LENGTH_SHORT).show()
+                                                    resultValue == -1 -> Toast.makeText(this@MainMenu, "Читачів з таким значенням параметра не існує", Toast.LENGTH_SHORT).show()
+                                                    else -> Toast.makeText(this@MainMenu, "Помилка в запиті до серверу", Toast.LENGTH_SHORT).show()
                                                 }
                                             }
-                                            override fun onResponse(call: Call, response: Response) {
-                                                if (!response.isSuccessful) {
-                                                    runOnUiThread {
-                                                        Toast.makeText(this@MainMenu, "Помилка на сервері, вибачте за незручності.", Toast.LENGTH_SHORT).show()
-                                                    }
-                                                    return
-                                                }
-                                                try {
-                                                    runOnUiThread {
-                                                        val resultValue = JSONObject(response.body?.use { it?.string() }).getInt("result")
-                                                        if (resultValue > 0) {
-                                                            Toast.makeText(
-                                                                this@MainMenu,
-                                                                "Видалені читачі: $resultValue",
-                                                                Toast.LENGTH_SHORT
-                                                            ).show()
-                                                        } else if (resultValue == -1) {
-                                                            Toast.makeText(this@MainMenu, "Читачів з таким значенням параметра не існує", Toast.LENGTH_SHORT).show()
-                                                        } else {
-                                                            Toast.makeText(this@MainMenu, "Помилка в запиті до серверу", Toast.LENGTH_SHORT).show()
-                                                        }
-                                                    }
-                                                } catch (e: Exception) {
-                                                    runOnUiThread {
-                                                        Toast.makeText(this@MainMenu, "Помилка при обробці відповіді сервера.", Toast.LENGTH_SHORT).show()
-                                                    }
-                                                }
-                                            }
-                                        })
+                                        }
+
                                         dialogInterface.dismiss()
                                     }
                                     .setNegativeButton("Ні") { dialogInterface, _ ->
@@ -551,88 +463,35 @@ class MainMenu : AppCompatActivity() {
                         }
                     }"""
 
-                            httpClient.postRequest(url, json, object : Callback {
-                                override fun onFailure(call: Call, e: IOException) {
-                                    runOnUiThread {
-                                        Toast.makeText(
-                                            this@MainMenu,
-                                            "Помилка: перевірте інтернет-з'єднання.",
-                                            Toast.LENGTH_SHORT
-                                        ).show()
-                                    }
-                                }
-
-                                override fun onResponse(call: Call, response: Response) {
-                                    if (!response.isSuccessful) {
-                                        runOnUiThread {
-                                            Toast.makeText(
-                                                this@MainMenu,
-                                                "Помилка на сервері.",
-                                                Toast.LENGTH_SHORT
-                                            ).show()
+                            httpClient.safePostRequest(this@MainMenu, url, json) { jsonResponse ->
+                                val resultValue = jsonResponse["result"]
+                                runOnUiThread {
+                                    if (resultValue is JSONArray) {
+                                        val allParams = mutableListOf<List<String>>()
+                                        for (i in 0 until resultValue.length()) {
+                                            val item = resultValue.getJSONArray(i)
+                                            val params = mutableListOf<String>()
+                                            params.add((i + 1).toString()) // нумерація рядків
+                                            for (j in 0 until item.length()) {
+                                                params.add(item.getString(j))
+                                            }
+                                            allParams.add(params)
                                         }
-                                        return
-                                    }
 
-                                    try {
-                                        val resultValue = JSONObject(response.body?.string() ?: "")["result"]
-                                        if (resultValue is JSONArray) {
-                                            val allParams = mutableListOf<List<String>>()
+                                        Toast.makeText(this@MainMenu, "Створюється звіт...", Toast.LENGTH_SHORT).show()
+                                        val directory = createPdfReport(allParams)
 
-                                            for (i in 0 until resultValue.length()) {
-                                                val item = resultValue.getJSONArray(i)
-                                                val params = mutableListOf<String>()
-                                                params.add((i + 1).toString()) // нумерація рядків
-                                                for (j in 0 until item.length()) {
-                                                    params.add(item.getString(j))
-                                                }
-                                                allParams.add(params)
-                                            }
-
-                                            runOnUiThread {
-                                                Toast.makeText(
-                                                    this@MainMenu,
-                                                    "Створюється звіт...",
-                                                    Toast.LENGTH_SHORT
-                                                ).show()
-
-                                                // Виклик твоєї функції створення PDF
-                                                val directory = createPdfReport(allParams)
-
-                                                if (directory != null) {
-                                                    Toast.makeText(
-                                                        this@MainMenu,
-                                                        "Звіт збережено у: ${directory.absolutePath}/report.pdf",
-                                                        Toast.LENGTH_LONG
-                                                    ).show()
-                                                } else {
-                                                    Toast.makeText(
-                                                        this@MainMenu,
-                                                        "Помилка при створенні звіту.",
-                                                        Toast.LENGTH_SHORT
-                                                    ).show()
-                                                }
-                                            }
+                                        if (directory != null) {
+                                            Toast.makeText(this@MainMenu, "Звіт збережено у: ${directory.absolutePath}/report.pdf", Toast.LENGTH_LONG).show()
                                         } else {
-                                            runOnUiThread {
-                                                Toast.makeText(
-                                                    this@MainMenu,
-                                                    "Помилка у відповіді сервера.",
-                                                    Toast.LENGTH_SHORT
-                                                ).show()
-                                            }
+                                            Toast.makeText(this@MainMenu, "Помилка при створенні звіту.", Toast.LENGTH_SHORT).show()
                                         }
-                                    } catch (e: Exception) {
-                                        runOnUiThread {
-                                            Toast.makeText(
-                                                this@MainMenu,
-                                                "Помилка при обробці відповіді сервера.",
-                                                Toast.LENGTH_SHORT
-                                            ).show()
-                                        }
+                                    } else {
+                                        Toast.makeText(this@MainMenu, "Помилка у відповіді сервера.", Toast.LENGTH_SHORT).show()
                                     }
                                 }
-                            })
+                            }
+
                         },
                         calendar.get(Calendar.YEAR),
                         calendar.get(Calendar.MONTH),

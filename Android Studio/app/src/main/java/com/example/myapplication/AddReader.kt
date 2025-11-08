@@ -73,45 +73,21 @@ class AddReader : AppCompatActivity() {
                             }
                         }"""
 
-                    httpClient.postRequest(url, json, object : Callback {
-                        override fun onFailure(call: Call, e: IOException) {
-                            runOnUiThread {
-                                Toast.makeText(this@AddReader, "Помилка: Перевірте з'єднання з інтернетом або повторіть спробу пізніше.", Toast.LENGTH_SHORT).show()
+                    httpClient.safePostRequest(this, url, json) { jsonResponse ->
+                        val resultValue = jsonResponse.getInt("result")
+                        when {
+                            resultValue > 0 -> {
+                                Toast.makeText(this, "Читач успішно зареєстрований", Toast.LENGTH_SHORT).show()
+                                finish()
+                            }
+                            resultValue == -1 -> {
+                                Toast.makeText(this, "Помилка: Не вдалося зареєструвати читача", Toast.LENGTH_SHORT).show()
+                            }
+                            else -> {
+                                Toast.makeText(this, "Помилка в запиті до серверу", Toast.LENGTH_SHORT).show()
                             }
                         }
-
-                        override fun onResponse(call: Call, response: Response) {
-                            if (!response.isSuccessful) {
-                                runOnUiThread {
-                                    Toast.makeText(this@AddReader, "Помилка на сервері, вибачте за незручності.", Toast.LENGTH_SHORT).show()
-                                }
-                                return
-                            }
-
-                            try {
-                                runOnUiThread {
-                                    val resultValue = JSONObject(response.body?.use { it?.string() }).getInt("result")
-                                    if (resultValue > 0) {
-                                        Toast.makeText(
-                                            this@AddReader,
-                                            "Читач успішно зареєстрований",
-                                            Toast.LENGTH_SHORT
-                                        ).show()
-                                        this@AddReader.finish()
-                                    } else if (resultValue == -1) {
-                                        Toast.makeText(this@AddReader, "Помилка: Не вдалося зареєструвати читача", Toast.LENGTH_SHORT).show()
-                                    } else {
-                                        Toast.makeText(this@AddReader, "Помилка в запиті до серверу", Toast.LENGTH_SHORT).show()
-                                    }
-                                }
-
-                            } catch (e: Exception) {
-                                runOnUiThread {
-                                    Toast.makeText(this@AddReader, "Помилка при обробці відповіді сервера.", Toast.LENGTH_SHORT).show()
-                                }
-                            }
-                        }
-                    })
+                    }
                 }
             }
             "update_reader" -> {
@@ -151,42 +127,21 @@ class AddReader : AppCompatActivity() {
                                     "reader_id": "$idReader"
                                 }
                             }"""
-                            httpClient.postRequest(url, json, object : Callback {
-                                override fun onFailure(call: Call, e: IOException) {
-                                    runOnUiThread {
-                                        Toast.makeText(this@AddReader, "Помилка: Перевірте з'єднання з інтернетом або повторіть спробу пізніше.", Toast.LENGTH_SHORT).show()
+                            httpClient.safePostRequest(this, url, json) { jsonResponse ->
+                                val resultValue = jsonResponse.getInt("result")
+                                when {
+                                    resultValue > 0 -> {
+                                        Toast.makeText(this, "Читач видалений", Toast.LENGTH_SHORT).show()
+                                        finish()
+                                    }
+                                    resultValue == -1 -> {
+                                        Toast.makeText(this, "Помилка: Такого ID читача не існує", Toast.LENGTH_SHORT).show()
+                                    }
+                                    else -> {
+                                        Toast.makeText(this, "Помилка в запиті до серверу", Toast.LENGTH_SHORT).show()
                                     }
                                 }
-                                override fun onResponse(call: Call, response: Response) {
-                                    if (!response.isSuccessful) {
-                                        runOnUiThread {
-                                            Toast.makeText(this@AddReader, "Помилка на сервері, вибачте за незручності.", Toast.LENGTH_SHORT).show()
-                                        }
-                                        return
-                                    }
-                                    try {
-                                        runOnUiThread {
-                                            val resultValue = JSONObject(response.body?.use { it?.string() }).getInt("result")
-                                            if (resultValue > 0) {
-                                                Toast.makeText(
-                                                    this@AddReader,
-                                                    "Читач видалений",
-                                                    Toast.LENGTH_SHORT
-                                                ).show()
-                                                this@AddReader.finish()
-                                            } else if (resultValue == -1) {
-                                                Toast.makeText(this@AddReader, "Помилка: Такого ID читача не існує", Toast.LENGTH_SHORT).show()
-                                            } else {
-                                                Toast.makeText(this@AddReader, "Помилка в запиті до серверу", Toast.LENGTH_SHORT).show()
-                                            }
-                                        }
-                                    } catch (e: Exception) {
-                                        runOnUiThread {
-                                            Toast.makeText(this@AddReader, "Помилка при обробці відповіді сервера.", Toast.LENGTH_SHORT).show()
-                                        }
-                                    }
-                                }
-                            })
+                            }
                         }
                         builder.setNegativeButton("Ні") { dialog, which ->
                             dialog.dismiss()
@@ -226,45 +181,21 @@ class AddReader : AppCompatActivity() {
                             }
                         }"""
 
-                        httpClient.postRequest(url, json, object : Callback {
-                            override fun onFailure(call: Call, e: IOException) {
-                                runOnUiThread {
-                                    Toast.makeText(this@AddReader, "Помилка: Перевірте з'єднання з інтернетом або повторіть спробу пізніше.", Toast.LENGTH_SHORT).show()
+                        httpClient.safePostRequest(this, url, json) { jsonResponse ->
+                            val resultValue = jsonResponse.getInt("result")
+                            when {
+                                resultValue > 0 -> {
+                                    Toast.makeText(this, "Читач успішно оновлений", Toast.LENGTH_SHORT).show()
+                                    finish()
+                                }
+                                resultValue == -1 -> {
+                                    Toast.makeText(this, "Помилка: Такого ID читача не існує", Toast.LENGTH_SHORT).show()
+                                }
+                                else -> {
+                                    Toast.makeText(this, "Помилка в запиті до серверу", Toast.LENGTH_SHORT).show()
                                 }
                             }
-
-                            override fun onResponse(call: Call, response: Response) {
-                                if (!response.isSuccessful) {
-                                    runOnUiThread {
-                                        Toast.makeText(this@AddReader, "Помилка на сервері, вибачте за незручності.", Toast.LENGTH_SHORT).show()
-                                    }
-                                    return
-                                }
-
-                                try {
-                                    runOnUiThread {
-                                        val resultValue = JSONObject(response.body?.use { it?.string() }).getInt("result")
-                                        if (resultValue > 0) {
-                                            Toast.makeText(
-                                                this@AddReader,
-                                                "Читач успішно оновлений",
-                                                Toast.LENGTH_SHORT
-                                            ).show()
-                                            this@AddReader.finish()
-                                        } else if (resultValue == -1) {
-                                            Toast.makeText(this@AddReader, "Помилка: Такого ID читача не існує", Toast.LENGTH_SHORT).show()
-                                        } else {
-                                            Toast.makeText(this@AddReader, "Помилка в запиті до серверу", Toast.LENGTH_SHORT).show()
-                                        }
-                                    }
-
-                                } catch (e: Exception) {
-                                    runOnUiThread {
-                                        Toast.makeText(this@AddReader, "Помилка при обробці відповіді сервера.", Toast.LENGTH_SHORT).show()
-                                    }
-                                }
-                            }
-                        })
+                        }
                     }
                 }
                 else {

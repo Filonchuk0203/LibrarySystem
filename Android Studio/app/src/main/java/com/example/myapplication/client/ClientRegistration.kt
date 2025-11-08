@@ -8,12 +8,8 @@ import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.example.myapplication.HttpClient
 import com.example.myapplication.R
-import okhttp3.Call
-import okhttp3.Callback
-import okhttp3.Response
 import org.json.JSONArray
 import org.json.JSONObject
-import java.io.IOException
 
 class ClientRegistration : AppCompatActivity() {
 
@@ -90,74 +86,42 @@ class ClientRegistration : AppCompatActivity() {
                     }
                 }"""
 
-                httpClient.postRequest(url, json, object : Callback {
-                    override fun onFailure(call: Call, e: IOException) {
-                        runOnUiThread {
-                            Toast.makeText(
-                                this@ClientRegistration,
-                                "Помилка: Перевірте з'єднання з інтернетом або повторіть спробу пізніше.",
-                                Toast.LENGTH_SHORT
-                            ).show()
-                        }
-                    }
-
-                    override fun onResponse(call: Call, response: Response) {
-                        if (!response.isSuccessful) {
-                            runOnUiThread {
+                httpClient.safePostRequest(this, url, json) { jsonResponse ->
+                    val resultValue = jsonResponse["result"]
+                    runOnUiThread {
+                        when {
+                            resultValue is JSONArray -> {
                                 Toast.makeText(
                                     this@ClientRegistration,
-                                    "Помилка на сервері, вибачте за незручності.",
+                                    "Реєстрація успішна!",
+                                    Toast.LENGTH_SHORT
+                                ).show()
+                                val intent = Intent(
+                                    this@ClientRegistration,
+                                    ClientMainMenu::class.java
+                                )
+                                intent.putExtra("clientId", resultValue.getString(0))
+                                intent.putExtra("password", password)
+                                startActivity(intent)
+                                finish()
+                            }
+                            resultValue == -1 -> {
+                                Toast.makeText(
+                                    this@ClientRegistration,
+                                    "Даний логін вже існує. Введіть інший.",
                                     Toast.LENGTH_SHORT
                                 ).show()
                             }
-                            return
-                        }
-
-                        try {
-                            val resultValue =
-                                JSONObject(response.body?.use { it.string() })["result"]
-                            runOnUiThread {
-                                when (resultValue) {
-                                    is JSONArray -> {
-                                        Toast.makeText(
-                                            this@ClientRegistration,
-                                            "Реєстрація успішна!",
-                                            Toast.LENGTH_SHORT
-                                        ).show()
-                                        val intent = Intent(
-                                            this@ClientRegistration,
-                                            ClientMainMenu::class.java
-                                        )
-                                        intent.putExtra("clientId", resultValue.getString(0))
-                                        intent.putExtra("password", password)
-                                        startActivity(intent)
-                                        finish()
-                                    }
-
-                                    -1 -> Toast.makeText(
-                                        this@ClientRegistration,
-                                        "Даний логін вже існує. Введіть інший.",
-                                        Toast.LENGTH_SHORT
-                                    ).show()
-
-                                    else -> Toast.makeText(
-                                        this@ClientRegistration,
-                                        "Помилка в запиті до серверу",
-                                        Toast.LENGTH_SHORT
-                                    ).show()
-                                }
-                            }
-                        } catch (e: Exception) {
-                            runOnUiThread {
+                            else -> {
                                 Toast.makeText(
                                     this@ClientRegistration,
-                                    "Помилка при обробці відповіді сервера.",
+                                    "Помилка в запиті до серверу",
                                     Toast.LENGTH_SHORT
                                 ).show()
                             }
                         }
                     }
-                })
+                }
             } else {
                 Toast.makeText(
                     this,
@@ -183,9 +147,7 @@ class ClientRegistration : AppCompatActivity() {
             loginEditText
         )
         for (editText in editTexts) {
-            if (editText.text.toString().isEmpty()) {
-                return true
-            }
+            if (editText.text.toString().isEmpty()) return true
         }
         return false
     }

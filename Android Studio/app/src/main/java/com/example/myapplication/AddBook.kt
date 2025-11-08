@@ -80,45 +80,21 @@ class AddBook : AppCompatActivity() {
                             }
                         }"""
 
-                    httpClient.postRequest(url, json, object : Callback {
-                        override fun onFailure(call: Call, e: IOException) {
-                            runOnUiThread {
-                                Toast.makeText(this@AddBook, "Помилка: Перевірте з'єднання з інтернетом або повторіть спробу пізніше.", Toast.LENGTH_SHORT).show()
+                    httpClient.safePostRequest(this, url, json) { jsonResponse ->
+                        val resultValue = jsonResponse.getInt("result")
+                        when {
+                            resultValue > 0 -> {
+                                Toast.makeText(this, "Книга успішно зареєстрована", Toast.LENGTH_SHORT).show()
+                                finish()
+                            }
+                            resultValue == -1 -> {
+                                Toast.makeText(this, "Помилка: ISBN книги вже існує в даній бібліотеці", Toast.LENGTH_SHORT).show()
+                            }
+                            else -> {
+                                Toast.makeText(this, "Помилка в запиті до серверу", Toast.LENGTH_SHORT).show()
                             }
                         }
-
-                        override fun onResponse(call: Call, response: Response) {
-                            if (!response.isSuccessful) {
-                                runOnUiThread {
-                                    Toast.makeText(this@AddBook, "Помилка на сервері, вибачте за незручності.", Toast.LENGTH_SHORT).show()
-                                }
-                                return
-                            }
-
-                            try {
-                                runOnUiThread {
-                                    val resultValue = JSONObject(response.body?.use { it?.string() }).getInt("result")
-                                    if (resultValue > 0) {
-                                        Toast.makeText(
-                                            this@AddBook,
-                                            "Книга успішно зареєстрована",
-                                            Toast.LENGTH_SHORT
-                                        ).show()
-                                        this@AddBook.finish()
-                                    } else if (resultValue == -1) {
-                                        Toast.makeText(this@AddBook, "Помилка: ISBN книги вже існує в даній бібіліотеці", Toast.LENGTH_SHORT).show()
-                                    } else {
-                                        Toast.makeText(this@AddBook, "Помилка в запиті до серверу", Toast.LENGTH_SHORT).show()
-                                    }
-                                }
-
-                            } catch (e: Exception) {
-                                runOnUiThread {
-                                    Toast.makeText(this@AddBook, "Помилка при обробці відповіді сервера.", Toast.LENGTH_SHORT).show()
-                                }
-                            }
-                        }
-                    })
+                    }
                 }
             }
             "update_book" -> {
@@ -160,42 +136,21 @@ class AddBook : AppCompatActivity() {
                                 }
                             }"""
 
-                            httpClient.postRequest(url, json, object : Callback {
-                                override fun onFailure(call: Call, e: IOException) {
-                                    runOnUiThread {
-                                        Toast.makeText(this@AddBook, "Помилка: Перевірте з'єднання з інтернетом або повторіть спробу пізніше.", Toast.LENGTH_SHORT).show()
+                            httpClient.safePostRequest(this, url, json) { jsonResponse ->
+                                val resultValue = jsonResponse.getInt("result")
+                                when {
+                                    resultValue > 0 -> {
+                                        Toast.makeText(this, "Книга видалена", Toast.LENGTH_SHORT).show()
+                                        finish()
+                                    }
+                                    resultValue == -1 -> {
+                                        Toast.makeText(this, "Помилка: Такого ID книги не існує", Toast.LENGTH_SHORT).show()
+                                    }
+                                    else -> {
+                                        Toast.makeText(this, "Помилка в запиті до серверу", Toast.LENGTH_SHORT).show()
                                     }
                                 }
-                                override fun onResponse(call: Call, response: Response) {
-                                    if (!response.isSuccessful) {
-                                        runOnUiThread {
-                                            Toast.makeText(this@AddBook, "Помилка на сервері, вибачте за незручності.", Toast.LENGTH_SHORT).show()
-                                        }
-                                        return
-                                    }
-                                    try {
-                                        runOnUiThread {
-                                            val resultValue = JSONObject(response.body?.use { it?.string() }).getInt("result")
-                                            if (resultValue > 0) {
-                                                Toast.makeText(
-                                                    this@AddBook,
-                                                    "Книга видалена",
-                                                    Toast.LENGTH_SHORT
-                                                ).show()
-                                                this@AddBook.finish()
-                                            } else if (resultValue == -1) {
-                                                Toast.makeText(this@AddBook, "Помилка: Такого ID книги не існує", Toast.LENGTH_SHORT).show()
-                                            } else {
-                                                Toast.makeText(this@AddBook, "Помилка в запиті до серверу", Toast.LENGTH_SHORT).show()
-                                            }
-                                        }
-                                    } catch (e: Exception) {
-                                        runOnUiThread {
-                                            Toast.makeText(this@AddBook, "Помилка при обробці відповіді сервера.", Toast.LENGTH_SHORT).show()
-                                        }
-                                    }
-                                }
-                            })
+                            }
                         }
                         builder.setNegativeButton("Ні") { dialog, which ->
                             dialog.dismiss()
@@ -240,45 +195,21 @@ class AddBook : AppCompatActivity() {
                             }
                         }"""
 
-                        httpClient.postRequest(url, json, object : Callback {
-                            override fun onFailure(call: Call, e: IOException) {
-                                runOnUiThread {
-                                    Toast.makeText(this@AddBook, "Помилка: Перевірте з'єднання з інтернетом або повторіть спробу пізніше.", Toast.LENGTH_SHORT).show()
+                        httpClient.safePostRequest(this, url, json) { jsonResponse ->
+                            val resultValue = jsonResponse.getInt("result")
+                            when {
+                                resultValue > 0 -> {
+                                    Toast.makeText(this, "Книга успішно оновлена", Toast.LENGTH_SHORT).show()
+                                    finish()
+                                }
+                                resultValue == -1 -> {
+                                    Toast.makeText(this, "Помилка: Такого ID книги не існує", Toast.LENGTH_SHORT).show()
+                                }
+                                else -> {
+                                    Toast.makeText(this, "Помилка в запиті до серверу", Toast.LENGTH_SHORT).show()
                                 }
                             }
-
-                            override fun onResponse(call: Call, response: Response) {
-                                if (!response.isSuccessful) {
-                                    runOnUiThread {
-                                        Toast.makeText(this@AddBook, "Помилка на сервері, вибачте за незручності.", Toast.LENGTH_SHORT).show()
-                                    }
-                                    return
-                                }
-
-                                try {
-                                    runOnUiThread {
-                                        val resultValue = JSONObject(response.body?.use { it?.string() }).getInt("result")
-                                        if (resultValue > 0) {
-                                            Toast.makeText(
-                                                this@AddBook,
-                                                "Книга успішно оновлена",
-                                                Toast.LENGTH_SHORT
-                                            ).show()
-                                            this@AddBook.finish()
-                                        } else if (resultValue == -1) {
-                                            Toast.makeText(this@AddBook, "Помилка: Такого ID книги не існує", Toast.LENGTH_SHORT).show()
-                                        } else {
-                                            Toast.makeText(this@AddBook, "Помилка в запиті до серверу", Toast.LENGTH_SHORT).show()
-                                        }
-                                    }
-
-                                } catch (e: Exception) {
-                                    runOnUiThread {
-                                        Toast.makeText(this@AddBook, "Помилка при обробці відповіді сервера.", Toast.LENGTH_SHORT).show()
-                                    }
-                                }
-                            }
-                        })
+                        }
                     }
                 }
                 else {

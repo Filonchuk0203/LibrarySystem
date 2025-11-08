@@ -44,51 +44,38 @@ class MainActivity : AppCompatActivity() {
                             }
                         }"""
 
-                    httpClient.postRequest(url, json, object : Callback {
-                        override fun onFailure(call: Call, e: IOException) {
-                            runOnUiThread {
-                                Toast.makeText(this@MainActivity, "Помилка: Перевірте з'єднання з інтернетом або повторіть спробу пізніше.", Toast.LENGTH_SHORT).show()
-                            }
+                    httpClient.safePostRequest(this, url, json) { jsonResponse ->
+                        val resultValue = jsonResponse["result"]
+
+                        if (resultValue is JSONArray) {
+                            val intent = Intent(this@MainActivity, MainMenu::class.java)
+                            intent.putExtra("librarianId", resultValue.getString(0))
+                            intent.putExtra("libraryId", resultValue.getString(1))
+                            intent.putExtra("password", password)
+
+                            Toast.makeText(
+                                this@MainActivity,
+                                "Вхід в систему успішний",
+                                Toast.LENGTH_SHORT
+                            ).show()
+
+                            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK)
+                            startActivity(intent)
+
+                        } else if (resultValue == -1) {
+                            Toast.makeText(
+                                this@MainActivity,
+                                "Помилка: неправильний логін або пароль",
+                                Toast.LENGTH_SHORT
+                            ).show()
+                        } else {
+                            Toast.makeText(
+                                this@MainActivity,
+                                "Помилка в запиті до серверу",
+                                Toast.LENGTH_SHORT
+                            ).show()
                         }
-
-                        override fun onResponse(call: Call, response: Response) {
-                            if (!response.isSuccessful) {
-                                runOnUiThread {
-                                    Toast.makeText(this@MainActivity, "Помилка на сервері, вибачте за незручності.", Toast.LENGTH_SHORT).show()
-                                }
-                                return
-                            }
-
-                            try {
-                                runOnUiThread {
-                                    val resultValue =
-                                        JSONObject(response.body?.use { it?.string() })["result"]
-                                    if (resultValue is JSONArray) {
-                                        val intent = Intent(this@MainActivity, MainMenu::class.java)
-                                        intent.putExtra("librarianId", resultValue.getString(0))
-                                        intent.putExtra("libraryId", resultValue.getString(1))
-                                        intent.putExtra("password", password)
-                                        Toast.makeText(
-                                            this@MainActivity,
-                                            "Вхід в систему успішний",
-                                            Toast.LENGTH_SHORT
-                                        ).show()
-                                        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK)
-                                        this@MainActivity.startActivity(intent)
-                                    } else if (resultValue == -1) {
-                                        Toast.makeText(this@MainActivity, "Помилка: неправильний логін або пароль", Toast.LENGTH_SHORT).show()
-                                    } else {
-                                        Toast.makeText(this@MainActivity, "Помилка в запиті до серверу", Toast.LENGTH_SHORT).show()
-                                    }
-                                }
-
-                            } catch (e: Exception) {
-                                runOnUiThread {
-                                    Toast.makeText(this@MainActivity, "Помилка при обробці відповіді сервера.", Toast.LENGTH_SHORT).show()
-                                }
-                            }
-                        }
-                    })
+                    }
                 } else {
                     Toast.makeText(this, "Помилка: Пароль має бути 8 або біільше символів.", Toast.LENGTH_SHORT).show()
                 }

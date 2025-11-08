@@ -11,12 +11,8 @@ import android.widget.Button
 import android.widget.EditText
 import android.widget.Toast
 import androidx.fragment.app.Fragment
-import okhttp3.Call
-import okhttp3.Callback
-import okhttp3.Response
 import org.json.JSONArray
 import org.json.JSONObject
-import java.io.IOException
 
 class UserRegistrationFragment : Fragment() {
     private lateinit var editTextName: EditText
@@ -30,8 +26,9 @@ class UserRegistrationFragment : Fragment() {
     private lateinit var editTextRepeatPassword: EditText
     private lateinit var autoCompleteTextViewLibrary: AutoCompleteTextView
     private lateinit var editTextSystemPassword: EditText
-    private lateinit var httpClient : HttpClient
+    private lateinit var httpClient: HttpClient
     private lateinit var buttonRegister: Button
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -56,71 +53,37 @@ class UserRegistrationFragment : Fragment() {
         httpClient = HttpClient()
 
         val url = getString(R.string.server_url)
+
+        // Отримання бібліотек
         var json = """{
             "function_name": "get_name_libraries"
         }"""
 
-        httpClient.postRequest(url, json, object : Callback {
-            override fun onFailure(call: Call, e: IOException) {
-                requireActivity().runOnUiThread {
-                    Toast.makeText(
-                        requireContext(),
-                        "Помилка: Перевірте з'єднання з інтернетом або повторіть спробу пізніше.",
-                        Toast.LENGTH_SHORT
-                    ).show()
+        httpClient.safePostRequest(requireActivity(), url, json) { jsonResponse ->
+            val resultValue = jsonResponse["result"]
+            if (resultValue is JSONArray) {
+                val allLibraries = mutableListOf<String>()
+                for (i in 0 until resultValue.length()) {
+                    val libraryName = resultValue.getString(i)
+                    allLibraries.add(libraryName)
                 }
+                val libraryAdapter = ArrayAdapter(
+                    requireContext(),
+                    android.R.layout.simple_dropdown_item_1line,
+                    allLibraries
+                )
+                autoCompleteTextViewLibrary.setAdapter(libraryAdapter)
+            } else {
+                Toast.makeText(requireContext(), "Помилка в запиті до серверу", Toast.LENGTH_SHORT).show()
             }
+        }
 
-            override fun onResponse(call: Call, response: Response) {
-                if (!response.isSuccessful) {
-                    requireActivity().runOnUiThread {
-                        Toast.makeText(
-                            requireContext(),
-                            "Помилка на сервері, вибачте за незручності.",
-                            Toast.LENGTH_SHORT
-                        ).show()
-                    }
-                    return
-                }
-
-                try {
-                    requireActivity().runOnUiThread {
-                        val resultValue = JSONObject(response.body?.use { it?.string() })["result"]
-                        if (resultValue is JSONArray) {
-                            val jsonArray = resultValue
-                            val allLibraries = mutableListOf<String>()
-                            for (i in 0 until jsonArray.length()) {
-                                val libraryName = jsonArray.getString(i)
-                                allLibraries.add(libraryName)
-                            }
-
-                            val libraryAdapter = ArrayAdapter(
-                                requireContext(),
-                                android.R.layout.simple_dropdown_item_1line,
-                                allLibraries
-                            )
-                            autoCompleteTextViewLibrary.setAdapter(libraryAdapter)
-                        } else {
-                            Toast.makeText(requireContext(), "Помилка в запиті до серверу", Toast.LENGTH_SHORT).show()
-                        }
-                    }
-                } catch (e: Exception) {
-                    requireActivity().runOnUiThread {
-                        Toast.makeText(
-                            requireContext(),
-                            "Помилка при обробці відповіді сервера.",
-                            Toast.LENGTH_SHORT
-                        ).show()
-                    }
-                }
-            }
-        })
-
+        // Реєстрація користувача
         buttonRegister = view.findViewById(R.id.btnRegister)
-        buttonRegister .setOnClickListener {
+        buttonRegister.setOnClickListener {
             val password = editTextRepeatPassword.text.toString()
             val repeatPassword = editTextPassword.text.toString()
-            if (password == repeatPassword && password.length > 7){
+            if (password == repeatPassword && password.length > 7) {
                 if (areLibrarianFieldsEmpty(
                         editTextName,
                         editTextLastName,
@@ -128,8 +91,7 @@ class UserRegistrationFragment : Fragment() {
                         editTextAddress,
                         editTextLogin
                     )
-                )
-                {
+                ) {
                     Toast.makeText(requireContext(), "Помилка: Будь ласка, заповніть всі поля", Toast.LENGTH_SHORT).show()
                     return@setOnClickListener
                 }
@@ -141,7 +103,7 @@ class UserRegistrationFragment : Fragment() {
                 val address = editTextAddress.text.toString()
                 val email = editTextEmail.text.toString()
                 val login = editTextLogin.text.toString()
-                val lybraryName = autoCompleteTextViewLibrary.text.toString()
+                val libraryName = autoCompleteTextViewLibrary.text.toString()
                 val systemPassword = editTextSystemPassword.text.toString()
 
                 val json = """{
@@ -155,83 +117,40 @@ class UserRegistrationFragment : Fragment() {
                         "email": "$email",
                         "login": "$login",
                         "password": "$password",
-                        "library_name": "$lybraryName",
+                        "library_name": "$libraryName",
                         "system_password": "$systemPassword"
                     }
                 }"""
 
-                httpClient.postRequest(url, json, object : Callback {
-                    override fun onFailure(call: Call, e: IOException) {
-                        requireActivity().runOnUiThread {
-                            Toast.makeText(
-                                requireContext(),
-                                "Помилка: Перевірте з'єднання з інтернетом або повторіть спробу пізніше.",
-                                Toast.LENGTH_SHORT
-                            ).show()
+                httpClient.safePostRequest(requireActivity(), url, json) { jsonResponse ->
+                    val resultValue = jsonResponse["result"]
+                    when {
+                        resultValue is JSONArray -> {
+                            val intent = Intent(requireContext(), MainMenu::class.java)
+                            intent.putExtra("librarianId", resultValue.getString(0))
+                            intent.putExtra("libraryId", resultValue.getString(1))
+                            intent.putExtra("password", password)
+                            Toast.makeText(requireContext(), "Реєстрація успішна", Toast.LENGTH_SHORT).show()
+                            requireActivity().startActivity(intent)
+                            requireActivity().finish()
                         }
+                        resultValue == -2 -> Toast.makeText(
+                            requireContext(),
+                            "Помилка: Введеної бібліотеки не існує або невірний системний пароль",
+                            Toast.LENGTH_SHORT
+                        ).show()
+                        resultValue == -1 -> Toast.makeText(
+                            requireContext(),
+                            "Даний логін вже існує. Введіть інший.",
+                            Toast.LENGTH_SHORT
+                        ).show()
+                        else -> Toast.makeText(
+                            requireContext(),
+                            "Помилка в запиті до серверу",
+                            Toast.LENGTH_SHORT
+                        ).show()
                     }
-
-                    override fun onResponse(call: Call, response: Response) {
-                        if (!response.isSuccessful) {
-                            requireActivity().runOnUiThread {
-                                Toast.makeText(
-                                    requireContext(),
-                                    "Помилка на сервері, вибачте за незручності.",
-                                    Toast.LENGTH_SHORT
-                                ).show()
-                            }
-                            return
-                        }
-
-                        try {
-                            requireActivity().runOnUiThread {
-                                val resultValue = JSONObject(response.body?.use { it?.string() })["result"]
-                                if (resultValue is JSONArray) {
-                                    val intent = Intent(requireContext(), MainMenu::class.java)
-                                    intent.putExtra("librarianId", resultValue.getString(0))
-                                    intent.putExtra("libraryId", resultValue.getString(1))
-                                    intent.putExtra("password", password)
-                                    Toast.makeText(
-                                        requireContext(),
-                                        "Реєстрація успішна",
-                                        Toast.LENGTH_SHORT
-                                    ).show()
-                                    requireActivity().startActivity(intent)
-                                    requireActivity().finish()
-                                }
-                                else if (resultValue == -2) {
-                                        Toast.makeText(
-                                            requireContext(),
-                                            "Помилка: Введеної бібліотеки не існує або невірний системний пароль",
-                                            Toast.LENGTH_SHORT
-                                        ).show()
-                                }
-                                else if (resultValue == -1) {
-                                        Toast.makeText(
-                                            requireContext(),
-                                            "Даний логін вже існує. Введіть інший.",
-                                            Toast.LENGTH_SHORT
-                                        ).show()
-                                }
-                                else {
-                                    Toast.makeText(
-                                        requireContext(),
-                                        "Помилка в запиті до серверу",
-                                        Toast.LENGTH_SHORT
-                                    ).show()
-                                }
-                            }
-                        } catch (e: Exception) {
-                            requireActivity().runOnUiThread {
-                                Toast.makeText(
-                                    requireContext(),
-                                    "Помилка при обробці відповіді сервера.",
-                                    Toast.LENGTH_SHORT
-                                ).show()
-                            }
-                        }
-                    }
-                })
+                }
             } else {
                 Toast.makeText(requireContext(), "Помилка: Пароль замалий (Менше 8 символів) або повторений неправильно", Toast.LENGTH_SHORT).show()
             }
@@ -246,13 +165,11 @@ class UserRegistrationFragment : Fragment() {
         loginEditText: EditText
     ): Boolean {
         val editTexts = arrayOf(nameEditText, lastNameEditText, phoneEditText, addressEditText, loginEditText)
-
         for (editText in editTexts) {
             if (editText.text.toString().isEmpty()) {
                 return true
             }
         }
-
         return false
     }
 }

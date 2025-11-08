@@ -11,16 +11,11 @@ import android.widget.Button
 import android.widget.ListView
 import android.widget.TextView
 import android.widget.Toast
-import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
-import okhttp3.Call
-import okhttp3.Callback
-import okhttp3.Response
 import org.json.JSONArray
 import org.json.JSONObject
-import java.io.IOException
 
-class TableViewer : AppCompatActivity(){
+class TableViewer : AppCompatActivity() {
     @SuppressLint("SetTextI18n", "MissingInflatedId")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -59,57 +54,32 @@ class TableViewer : AppCompatActivity(){
             }
         }
 
-        httpClient.postRequest(url, json, object : Callback {
-            override fun onFailure(call: Call, e: IOException) {
-                runOnUiThread {
-                    Toast.makeText(this@TableViewer, "Помилка: Перевірте з'єднання з інтернетом або повторіть спробу пізніше.", Toast.LENGTH_SHORT).show()
+        httpClient.safePostRequest(this, url, json) { jsonResponse ->
+            val resultValue = jsonResponse["result"]
+            if (resultValue is JSONArray) {
+                for (i in 0 until resultValue.length()) {
+                    val resultText = resultValue.getString(i)
+                    resultList.add(resultText)
                 }
+                val resultAdapter = object : ArrayAdapter<String>(
+                    this@TableViewer,
+                    android.R.layout.simple_list_item_1,
+                    resultList
+                ) {
+                    override fun getView(position: Int, convertView: View?, parent: ViewGroup): View {
+                        val view = super.getView(position, convertView, parent) as TextView
+                        view.setTextColor(Color.WHITE)  // задаємо білий текст
+                        return view
+                    }
+                }
+                listViewTable.adapter = resultAdapter
+            } else {
+                Toast.makeText(this@TableViewer, "Помилка в запиті до серверу", Toast.LENGTH_SHORT).show()
             }
-
-            override fun onResponse(call: Call, response: Response) {
-                if (!response.isSuccessful) {
-                    runOnUiThread {
-                        Toast.makeText(this@TableViewer, "Помилка на сервері, вибачте за незручності.", Toast.LENGTH_SHORT).show()
-                    }
-                    return
-                }
-
-                try {
-                    runOnUiThread {
-                        val resultValue = JSONObject(response.body?.use { it?.string() })["result"]
-                        if (resultValue is JSONArray) {
-                            for (i in 0 until resultValue.length()) {
-                                val resultText = resultValue.getString(i)
-                                resultList.add(resultText)
-                            }
-                            val resultAdapter = object : ArrayAdapter<String>(
-                                this@TableViewer,
-                                android.R.layout.simple_list_item_1,
-                                resultList
-                            ) {
-                                override fun getView(position: Int, convertView: View?, parent: ViewGroup): View {
-                                    val view = super.getView(position, convertView, parent) as TextView
-                                    view.setTextColor(Color.WHITE)  // задаємо білий текст
-                                    return view
-                                }
-                            }
-                            listViewTable.adapter = resultAdapter
-                            listViewTable.adapter = resultAdapter
-                        } else {
-                            Toast.makeText(this@TableViewer, "Помилка в запиті до серверу", Toast.LENGTH_SHORT).show()
-                        }
-                    }
-
-                } catch (e: Exception) {
-                    runOnUiThread {
-                        Toast.makeText(this@TableViewer, "Помилка при обробці відповіді сервера.", Toast.LENGTH_SHORT).show()
-                    }
-                }
-            }
-        })
+        }
 
         listViewTable.setOnItemClickListener { parent, view, position, id ->
-            if (type != "issue"){
+            if (type != "issue") {
                 val selectedItem = resultList[position]
                 when (type) {
                     "book" -> {

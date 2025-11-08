@@ -9,17 +9,11 @@ import android.widget.EditText
 import android.widget.Toast
 import com.example.myapplication.HttpClient
 import com.example.myapplication.R
-import okhttp3.Call
-import okhttp3.Callback
-import okhttp3.Response
 import org.json.JSONArray
 import org.json.JSONObject
-import java.io.IOException
-
 
 class ClientMainActivity : AppCompatActivity() {
     @SuppressLint("SetTextI18n")
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
@@ -28,78 +22,54 @@ class ClientMainActivity : AppCompatActivity() {
         val editTextPassword: EditText = findViewById(R.id.editTextPassword)
         val httpClient = HttpClient()
 
-        val buttonLogin : Button = findViewById(R.id.btnLogin)
-        buttonLogin .setOnClickListener {
+        val buttonLogin: Button = findViewById(R.id.btnLogin)
+        buttonLogin.setOnClickListener {
 
-            //val login = editTextLogin.text.toString()
-            //val password = editTextPassword.text.toString()
-            val login = "Djoker"
-            val password = "12345678"
+            val login = editTextLogin.text.toString()
+            val password = editTextPassword.text.toString()
+
             if (login.isNotEmpty() && password.isNotEmpty()) {
                 if (password.length > 7) {
                     val url = getString(R.string.server_url)
                     val json = """{
-                            "function_name": "check_client_credentials",
-                            "param_dict": {
-                                "login": "$login",
-                                "password": "$password"
-                            }
-                        }"""
-
-                    httpClient.postRequest(url, json, object : Callback {
-                        override fun onFailure(call: Call, e: IOException) {
-                            runOnUiThread {
-                                Toast.makeText(this@ClientMainActivity, "Помилка: Перевірте з'єднання з інтернетом або повторіть спробу пізніше.", Toast.LENGTH_SHORT).show()
-                            }
+                        "function_name": "check_client_credentials",
+                        "param_dict": {
+                            "login": "$login",
+                            "password": "$password"
                         }
+                    }"""
 
-                        override fun onResponse(call: Call, response: Response) {
-                            if (!response.isSuccessful) {
-                                runOnUiThread {
-                                    Toast.makeText(this@ClientMainActivity, "Помилка на сервері, вибачте за незручності.", Toast.LENGTH_SHORT).show()
+                    httpClient.safePostRequest(this, url, json) { jsonResponse ->
+                        val resultValue = jsonResponse["result"]
+                        runOnUiThread {
+                            when {
+                                resultValue is JSONArray -> {
+                                    val intent = Intent(this@ClientMainActivity, ClientMainMenu::class.java)
+                                    intent.putExtra("ClientID", resultValue.getString(0))
+                                    intent.putExtra("password", password)
+                                    Toast.makeText(this@ClientMainActivity, "Вхід в систему успішний", Toast.LENGTH_SHORT).show()
+                                    intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK)
+                                    startActivity(intent)
                                 }
-                                return
-                            }
-
-                            try {
-                                runOnUiThread {
-                                    val resultValue =
-                                        JSONObject(response.body?.use { it?.string() })["result"]
-                                    if (resultValue is JSONArray) {
-                                        val intent = Intent(this@ClientMainActivity, ClientMainMenu::class.java)
-                                        intent.putExtra("ClientID", resultValue.getString(0))
-                                        intent.putExtra("password", password)
-                                        Toast.makeText(
-                                            this@ClientMainActivity,
-                                            "Вхід в систему успішний",
-                                            Toast.LENGTH_SHORT
-                                        ).show()
-                                        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK)
-                                        this@ClientMainActivity.startActivity(intent)
-                                    } else if (resultValue == -1) {
-                                        Toast.makeText(this@ClientMainActivity, "Помилка: неправильний логін або пароль", Toast.LENGTH_SHORT).show()
-                                    } else {
-                                        Toast.makeText(this@ClientMainActivity, "Помилка в запиті до серверу", Toast.LENGTH_SHORT).show()
-                                    }
+                                resultValue == -1 -> {
+                                    Toast.makeText(this@ClientMainActivity, "Помилка: неправильний логін або пароль", Toast.LENGTH_SHORT).show()
                                 }
-
-                            } catch (e: Exception) {
-                                runOnUiThread {
-                                    Toast.makeText(this@ClientMainActivity, "Помилка при обробці відповіді сервера.", Toast.LENGTH_SHORT).show()
+                                else -> {
+                                    Toast.makeText(this@ClientMainActivity, "Помилка в запиті до серверу", Toast.LENGTH_SHORT).show()
                                 }
                             }
                         }
-                    })
+                    }
                 } else {
-                    Toast.makeText(this, "Помилка: Пароль має бути 8 або біільше символів.", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(this, "Помилка: Пароль має бути 8 або більше символів.", Toast.LENGTH_SHORT).show()
                 }
             } else {
                 Toast.makeText(this, "Помилка: Введіть всі поля.", Toast.LENGTH_SHORT).show()
             }
         }
 
-        val buttonRegister : Button = findViewById(R.id.btnRegister)
-        buttonRegister .setOnClickListener {
+        val buttonRegister: Button = findViewById(R.id.btnRegister)
+        buttonRegister.setOnClickListener {
             startActivity(Intent(this@ClientMainActivity, ClientRegistration::class.java))
         }
     }
