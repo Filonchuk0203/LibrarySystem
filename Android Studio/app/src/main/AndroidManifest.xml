@@ -56,9 +56,14 @@
             android:exported="true">
         </activity>
         <activity
-            android:name=".Terminal"
+            android:name=".terminal.BooksTabsActivity"
             android:exported="true">
         </activity>
+        <activity
+            android:name=".terminal.Terminal"
+            android:exported="true">
+        </activity>
+
 
         <activity
             android:name=".client.ClientMainActivity"

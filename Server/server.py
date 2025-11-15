@@ -2,6 +2,7 @@ from sanic import Sanic, response
 import yaml
 from database_manager import DatabaseManager
 import asyncio
+from datetime import datetime
 
 
 with open('param.yml', 'r') as stream:
@@ -92,8 +93,8 @@ async def create_run():
     await db_manager.modify_data_in_db(create_tables_query, None)
 
     # тест
-    # result = await db_manager.get_all_mybooks({'client_id': '474f3e6e-87c8-4f23-9149-cebfd7436be5'})
-    # print(result)
+    result = await db_manager.get_all_books({'client_id': '474f3e6e-87c8-4f23-9149-cebfd7436be5'})
+    print(result)
 
 app = Sanic("MySanicApp")
 

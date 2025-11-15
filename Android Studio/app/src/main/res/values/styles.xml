@@ -76,4 +76,9 @@
         <item name="android:padding">4dp</item>
     </style>
 
+    <style name="CustomDialogTheme" parent="ThemeOverlay.MaterialComponents.Dialog.Alert">
+        <item name="android:backgroundDimEnabled">true</item>
+        <item name="android:background">@android:color/transparent</item>
+    </style>
+
 </resources>

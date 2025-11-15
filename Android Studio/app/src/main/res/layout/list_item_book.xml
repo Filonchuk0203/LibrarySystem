@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal"
+    android:gravity="center_vertical"
+    android:padding="8dp">
+
+    <!-- Назва книги -->
+    <TextView
+        android:id="@+id/textBookInfo"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:text="Назва книги"
+        android:textColor="@android:color/white"
+        android:textSize="16sp"
+        android:paddingEnd="8dp" />
+
+    <!-- Кнопка зменшення -->
+    <Button
+        android:id="@+id/buttonDecrease"
+        android:layout_width="36dp"
+        android:layout_height="36dp"
+        android:text="–"
+        android:textSize="14sp"
+        android:padding="0dp"
+        android:includeFontPadding="false"
+        android:backgroundTint="#3A6EA5"
+        android:textColor="@android:color/white"/>
+
+    <!-- Лічильник -->
+    <TextView
+        android:id="@+id/textQuantity"
+        android:layout_width="36dp"
+        android:layout_height="wrap_content"
+        android:text="1"
+        android:textAlignment="center"
+        android:textColor="@android:color/white"
+        android:textSize="16sp"
+        android:layout_marginHorizontal="4dp"/>
+
+    <!-- Кнопка збільшення -->
+    <Button
+        android:id="@+id/buttonIncrease"
+        android:layout_width="36dp"
+        android:layout_height="36dp"
+        android:text="+"
+        android:textSize="14sp"
+        android:padding="0dp"
+        android:includeFontPadding="false"
+        android:backgroundTint="#3A6EA5"
+        android:textColor="@android:color/white"/>
+</LinearLayout>

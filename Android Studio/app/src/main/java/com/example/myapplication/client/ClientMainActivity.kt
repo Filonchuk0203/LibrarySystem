@@ -25,8 +25,10 @@ class ClientMainActivity : AppCompatActivity() {
         val buttonLogin: Button = findViewById(R.id.btnLogin)
         buttonLogin.setOnClickListener {
 
-            val login = editTextLogin.text.toString()
-            val password = editTextPassword.text.toString()
+//            val login = editTextLogin.text.toString()
+//            val password = editTextPassword.text.toString()
+            val login = "Djoker"
+            val password = "12345678"
 
             if (login.isNotEmpty() && password.isNotEmpty()) {
                 if (password.length > 7) {

@@ -63,6 +63,11 @@
                     android:id="@+id/btnDeleteBook"
                     style="@style/MenuSubButton"
                     android:text="Видалити книги" />
+
+                <Button
+                    android:id="@+id/btnSellBook"
+                    style="@style/MenuSubButton"
+                    android:text="Продати книги" />
             </LinearLayout>
         </LinearLayout>
 
@@ -104,6 +109,10 @@
                     android:id="@+id/btnDeleteReader"
                     style="@style/MenuSubButton"
                     android:text="Видалити читачів" />
+                <Button
+                    android:id="@+id/btnSyncReader"
+                    style="@style/MenuSubButton"
+                    android:text="Синхронізація читача з застосунком" />
             </LinearLayout>
         </LinearLayout>
 
@@ -157,7 +166,13 @@
         <Button
             android:id="@+id/btnReport"
             style="@style/MenuMainButton"
-            android:text="Звіт"
+            android:text="Звіт видачі/повернення"
+            android:layout_marginTop="16dp" />
+
+        <Button
+            android:id="@+id/btnReportSell"
+            style="@style/MenuMainButton"
+            android:text="Звіт продажів"
             android:layout_marginTop="16dp" />
 
         <Button

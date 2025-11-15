@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@drawable/bg_gradient">
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="16dp">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:orientation="vertical">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:background="@drawable/card_bg"
+                android:padding="24dp"
+                android:elevation="8dp"
+                android:layout_marginTop="40dp"
+                android:layout_marginStart="24dp"
+                android:layout_marginEnd="24dp">
+
+                <TextView
+                    android:id="@+id/textDialogTitle"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Вхід в систему"
+                    android:textColor="@android:color/white"
+                    android:textSize="24sp"
+                    android:textStyle="bold"
+                    android:layout_gravity="center_horizontal"
+                    android:layout_marginBottom="24dp"/>
+
+                <!-- Логін -->
+                <LinearLayout
+                    style="@style/InputWithIcon">
+                    <ImageView
+                        style="@style/InputIcon"
+                        android:src="@drawable/usrusr"/>
+                    <EditText
+                        android:id="@+id/editTextDialogLogin"
+                        style="@style/InputText"
+                        android:hint="Логін"
+                        android:inputType="text"/>
+                </LinearLayout>
+
+                <!-- Пароль -->
+                <LinearLayout
+                    style="@style/InputWithIcon"
+                    android:layout_marginTop="16dp">
+                    <ImageView
+                        style="@style/InputIcon"
+                        android:src="@drawable/pswd"/>
+                    <EditText
+                        android:id="@+id/editTextDialogPassword"
+                        style="@style/InputText"
+                        android:hint="Пароль"
+                        android:inputType="textPassword"/>
+                </LinearLayout>
+
+                <!-- Кнопка Увійти -->
+                <Button
+                    android:id="@+id/btnDialogLogin"
+                    style="@style/MenuMainButton"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Увійти"
+                    android:layout_marginTop="24dp"/>
+            </LinearLayout>
+        </LinearLayout>
+    </ScrollView>
+</RelativeLayout>

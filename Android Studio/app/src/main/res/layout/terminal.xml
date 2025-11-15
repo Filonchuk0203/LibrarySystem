@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@drawable/bg_gradient"
-    tools:context=".Terminal">
+    tools:context=".terminal.Terminal">
 
     <!-- Кнопка-хрестик у правому верхньому кутку -->
     <ImageButton

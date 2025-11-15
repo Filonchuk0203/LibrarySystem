@@ -25,7 +25,7 @@
             <ImageButton
                 android:id="@+id/btnMenu"
                 android:layout_width="48dp"
-                android:layout_height="48dp"
+                android:layout_height="36dp"
                 android:src="@drawable/three_line"
                 android:background="@android:color/transparent"
                 android:contentDescription="Меню"

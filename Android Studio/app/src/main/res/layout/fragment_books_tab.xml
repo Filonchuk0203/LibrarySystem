@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="@drawable/card_bg"
+    android:padding="16dp">
+
+    <!-- 🔹 Поле пошуку з AutoCompleteTextView і Spinner -->
+    <LinearLayout
+        android:id="@+id/searchContainer"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center_vertical"
+        android:background="@drawable/input_bg"
+        android:padding="8dp"
+        android:layout_marginBottom="12dp">
+
+        <!-- Поле введення для пошуку -->
+        <AutoCompleteTextView
+            android:id="@+id/autoCompleteTextViewFind"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:hint="Введіть назву книги"
+            android:inputType="text"
+            android:textColor="@android:color/white"
+            android:textColorHint="#BFD8FF"
+            android:background="@android:color/transparent"
+            android:textSize="18sp"
+            android:padding="4dp"/>
+
+        <!-- Спадне меню -->
+        <Spinner
+            android:id="@+id/spinnerFilter"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:spinnerMode="dropdown"
+            android:backgroundTint="@android:color/white"
+            android:popupBackground="@drawable/bg_gradient"
+            android:padding="4dp"/>
+    </LinearLayout>
+
+    <!-- 🔹 Список книг -->
+    <ListView
+        android:id="@+id/listView"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:divider="@android:color/darker_gray"
+        android:dividerHeight="0.5dp"
+        android:padding="8dp"/>
+
+    <!-- 🔹 Кнопки -->
+    <Button
+        android:id="@+id/buttonAddBook"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Додати книгу"
+        android:layout_marginTop="8dp"/>
+
+    <Button
+        android:id="@+id/buttonAction"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Дія"
+        android:layout_marginTop="8dp"/>
+</LinearLayout>

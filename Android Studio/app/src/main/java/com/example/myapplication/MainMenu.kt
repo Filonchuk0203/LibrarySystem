@@ -16,14 +16,9 @@ import com.itextpdf.kernel.pdf.PdfDocument
 import com.itextpdf.kernel.pdf.PdfWriter
 import com.itextpdf.layout.Document
 import com.itextpdf.layout.element.Table
-import okhttp3.Call
-import okhttp3.Callback
-import okhttp3.Response
 import org.json.JSONArray
-import org.json.JSONObject
 import java.io.File
 import java.io.FileOutputStream
-import java.io.IOException
 import com.itextpdf.kernel.font.PdfFont
 import com.itextpdf.kernel.font.PdfFontFactory
 import com.itextpdf.layout.Style
@@ -31,6 +26,9 @@ import com.itextpdf.layout.element.Cell
 import com.itextpdf.layout.element.Paragraph
 import com.itextpdf.layout.properties.UnitValue
 import android.app.DatePickerDialog
+import android.widget.EditText
+import com.example.myapplication.terminal.BooksTabsActivity
+import com.example.myapplication.terminal.Terminal
 import java.util.Calendar
 
 class MainMenu : AppCompatActivity() {
@@ -46,9 +44,6 @@ class MainMenu : AppCompatActivity() {
             Toast.makeText(this, "Помилка: Такого бібліотекаря або бібліотеки не існує", Toast.LENGTH_SHORT).show()
             finish()
         }
-        val btnAddBook: Button = findViewById(R.id.btnAddBook)
-        val btnViewBooks: Button = findViewById(R.id.btnViewBooks)
-        val btnDeleteBook: Button = findViewById(R.id.btnDeleteBook)
         val httpClient = HttpClient()
         val url = getString(R.string.server_url)
         var json = String()
@@ -84,6 +79,12 @@ class MainMenu : AppCompatActivity() {
                 subButtonIssuanceAndReturn.visibility = View.VISIBLE
             }
         }
+
+        val btnAddBook: Button = findViewById(R.id.btnAddBook)
+        val btnViewBooks: Button = findViewById(R.id.btnViewBooks)
+        val btnDeleteBook: Button = findViewById(R.id.btnDeleteBook)
+        val btnSellBook: Button = findViewById(R.id.btnSellBook)
+
 
         btnAddBook.setOnClickListener(View.OnClickListener {
             val intent = Intent(this, AddBook::class.java)
@@ -201,9 +202,16 @@ class MainMenu : AppCompatActivity() {
                 .show()
         }
 
+        btnSellBook.setOnClickListener(View.OnClickListener {
+            val intent = Intent(this, BooksTabsActivity::class.java)
+            intent.putExtra("libraryId", libraryId)
+            startActivity(intent)
+        })
+
         val btnAddReader: Button = findViewById(R.id.btnAddReader)
         val btnViewReaders: Button = findViewById(R.id.btnViewReaders)
         val btnDeleteReader: Button = findViewById(R.id.btnDeleteReader)
+        val btnSyncReader: Button = findViewById(R.id.btnSyncReader)
 
         btnAddReader.setOnClickListener(View.OnClickListener {
             val intent = Intent(this, AddReader::class.java)
@@ -321,6 +329,62 @@ class MainMenu : AppCompatActivity() {
                 }
                 .show()
         }
+
+        btnSyncReader.setOnClickListener(View.OnClickListener {
+            // Створюємо кастомний Layout для діалогу
+            val dialogView = layoutInflater.inflate(R.layout.dialog_login, null)
+            val editTextLogin = dialogView.findViewById<EditText>(R.id.editTextDialogLogin)
+            val editTextPassword = dialogView.findViewById<EditText>(R.id.editTextDialogPassword)
+            val btnDialogLogin = dialogView.findViewById<Button>(R.id.btnDialogLogin)
+            val textDialogTitle = dialogView.findViewById<TextView>(R.id.textDialogTitle)
+            btnDialogLogin.text = "Синхронізувати користувача"
+            textDialogTitle.text = "Синхронізація даних"
+            val dialog = AlertDialog.Builder(this, R.style.CustomDialogTheme)
+                .setView(dialogView)
+                .setCancelable(true)
+                .create()
+
+            dialog.show()
+
+            btnDialogLogin.setOnClickListener {
+                val login = editTextLogin.text.toString().trim()
+                val password = editTextPassword.text.toString().trim()
+
+                if (login.isEmpty() || password.isEmpty()) {
+                    Toast.makeText(this, "Помилка: Введіть усі поля.", Toast.LENGTH_SHORT).show()
+                    return@setOnClickListener
+                }
+
+                if (password.length < 8) {
+                    Toast.makeText(this, "Пароль має бути 8 або більше символів.", Toast.LENGTH_SHORT).show()
+                    return@setOnClickListener
+                }
+
+                val json = """{
+                    "function_name": "sync_reader_client",
+                    "param_dict": {
+                        "library_id": "$libraryId",
+                        "login": "$login",
+                        "password": "$password"
+                        
+                    }
+                }"""
+
+                httpClient.safePostRequest(this, url, json) { jsonResponse ->
+                    val resultValue = jsonResponse.optString("result", "")
+                    runOnUiThread {
+                        if (resultValue is String) {
+                            Toast.makeText(this, resultValue, Toast.LENGTH_SHORT).show()
+                            if (resultValue == "Синхронізація успішна") {
+                                dialog.dismiss()
+                            }
+                        } else {
+                            Toast.makeText(this, "Помилка в запиті до серверу", Toast.LENGTH_SHORT).show()
+                        }
+                    }
+                }
+            }
+        })
 
         val btnIssuance: Button = findViewById(R.id.btnIssuance)
         val btnReturn: Button = findViewById(R.id.btnReturn)

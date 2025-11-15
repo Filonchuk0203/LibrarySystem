@@ -1,8 +1,7 @@
-package com.example.myapplication
+package com.example.myapplication.terminal
 
 import android.Manifest
 import android.content.Intent
-import android.content.pm.ActivityInfo
 import android.content.pm.PackageManager
 import android.os.Bundle
 import android.os.Handler
@@ -16,22 +15,31 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
-import com.example.myapplication.client.ClientMainMenu
+import com.example.myapplication.HttpClient
+import com.example.myapplication.MainMenu
+import com.example.myapplication.R
 import com.journeyapps.barcodescanner.ScanContract
 import com.journeyapps.barcodescanner.ScanOptions
+import org.json.JSONArray
 
 class Terminal : AppCompatActivity() {
+
+    private var libraryId: String? = null
+    private var librarianId: String? = null
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.terminal)
 
-        val librarianId = intent.getStringExtra("librarianId")
-        val libraryId = intent.getStringExtra("libraryId")
+        libraryId = intent.getStringExtra("libraryId")
+        librarianId = intent.getStringExtra("librarianId")
         val password = intent.getStringExtra("password")
         val btnQR = findViewById<Button>(R.id.btnQR)
         val btnLoginManually = findViewById<Button>(R.id.btnLoginManually)
         val btnGuestPurchase = findViewById<Button>(R.id.btnGuestPurchase)
         val btnClose = findViewById<ImageButton>(R.id.btnClose)
+        val httpClient = HttpClient()
+        val url = getString(R.string.server_url)
 
         // --- Авторизація через QR ---
         btnQR.setOnClickListener {
@@ -46,12 +54,72 @@ class Terminal : AppCompatActivity() {
 
         // --- Авторизація через логін ---
         btnLoginManually.setOnClickListener {
+            // Створюємо кастомний Layout для діалогу
+            val dialogView = layoutInflater.inflate(R.layout.dialog_login, null)
+            val editTextLogin = dialogView.findViewById<EditText>(R.id.editTextDialogLogin)
+            val editTextPassword = dialogView.findViewById<EditText>(R.id.editTextDialogPassword)
+            val btnDialogLogin = dialogView.findViewById<Button>(R.id.btnDialogLogin)
 
+            val dialog = AlertDialog.Builder(this, R.style.CustomDialogTheme)
+                .setView(dialogView)
+                .setCancelable(true)
+                .create()
+
+            dialog.show()
+
+            btnDialogLogin.setOnClickListener {
+                val login = editTextLogin.text.toString().trim()
+                val password = editTextPassword.text.toString().trim()
+
+                if (login.isEmpty() || password.isEmpty()) {
+                    Toast.makeText(this, "Помилка: Введіть усі поля.", Toast.LENGTH_SHORT).show()
+                    return@setOnClickListener
+                }
+
+                if (password.length < 8) {
+                    Toast.makeText(this, "Пароль має бути 8 або більше символів.", Toast.LENGTH_SHORT).show()
+                    return@setOnClickListener
+                }
+
+                val json = """{
+                    "function_name": "check_client_credentials",
+                    "param_dict": {
+                        "login": "$login",
+                        "password": "$password"
+                    }
+                }"""
+
+                httpClient.safePostRequest(this, url, json) { jsonResponse ->
+                    val resultValue = jsonResponse["result"]
+                    runOnUiThread {
+                        when {
+                            resultValue is JSONArray -> {
+                                val intent = Intent(this, BooksTabsActivity::class.java)
+                                intent.putExtra("libraryId", libraryId)
+                                intent.putExtra("ClientID", resultValue.getString(0))
+                                intent.putExtra("password", password)
+                                intent.putExtra("librarianId", librarianId)
+                                Toast.makeText(this, "Вхід успішний", Toast.LENGTH_SHORT).show()
+                                startActivity(intent)
+                                dialog.dismiss()
+                            }
+                            resultValue == -1 -> {
+                                Toast.makeText(this, "Неправильний логін або пароль", Toast.LENGTH_SHORT).show()
+                            }
+                            else -> {
+                                Toast.makeText(this, "Помилка запиту до сервера", Toast.LENGTH_SHORT).show()
+                            }
+                        }
+                    }
+                }
+            }
         }
 
         // --- Купівля без авторизації ---
         btnGuestPurchase.setOnClickListener {
-
+            val intent = Intent(this, BooksTabsActivity::class.java)
+            intent.putExtra("libraryId", libraryId)
+            startActivity(intent)
         }
 
         // --- Кнопка-хрестик ---
@@ -120,7 +188,7 @@ class Terminal : AppCompatActivity() {
 
     private fun startQRScanner() {
         val options = ScanOptions()
-        options.setPrompt("Наведи камеру на QR-код клієнта")
+        options.setPrompt("Наведіть камеру на QR-код")
         options.setBeepEnabled(true)
         options.setOrientationLocked(false)
         qrScanLauncher.launch(options)
@@ -137,9 +205,11 @@ class Terminal : AppCompatActivity() {
                 Toast.makeText(this, "Успішно: $clientId", Toast.LENGTH_SHORT).show()
 
                 // 🔹 Переходимо в TerminalMainMenu
-                val intent = Intent(this, ClientMainMenu::class.java)
+                val intent = Intent(this, BooksTabsActivity::class.java)
+                intent.putExtra("libraryId", libraryId)
                 intent.putExtra("ClientID", clientId)
                 intent.putExtra("password", password)
+                intent.putExtra("librarianId", librarianId)
                 startActivity(intent)
             } else {
                 Toast.makeText(this, "Некоректний QR-код", Toast.LENGTH_SHORT).show()
